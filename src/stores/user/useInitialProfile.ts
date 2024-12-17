@@ -8,10 +8,8 @@ export const useInitialProfile = () => {
   useRequest(getProfileService, {
     onSuccess: (data) => {
       if (data.role === 'ADMIN') {
-        setUser(data);
-        return;
+        setUser(data)
       }
-      
     },
   });
 };
