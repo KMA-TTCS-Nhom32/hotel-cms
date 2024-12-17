@@ -1,4 +1,4 @@
-import { createContext, useContext, useRef } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { type StoreApi, useStore } from 'zustand';
 import { type UserStore, createUserStore } from './userStore';
 
@@ -9,12 +9,9 @@ export interface UserStoreProviderProps {
 }
 
 export function UserStoreProvider({ children }: Readonly<UserStoreProviderProps>) {
-  const storeRef = useRef<StoreApi<UserStore>>();
-  if (!storeRef.current) {
-    storeRef.current = createUserStore();
-  }
+  const [store] = useState<StoreApi<UserStore>>(() => createUserStore());
 
-  return <UserStoreContext.Provider value={storeRef.current}>{children}</UserStoreContext.Provider>;
+  return <UserStoreContext.Provider value={store}>{children}</UserStoreContext.Provider>;
 }
 
 export function useUserStore<T>(selector: (state: UserStore) => T): T {

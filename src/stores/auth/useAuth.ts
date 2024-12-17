@@ -2,7 +2,7 @@ import { ROUTE_PATH } from '@/routes/route.constant';
 import { getAccessToken } from './utils';
 import { LoginResponseDto } from '@ahomevilla-hotel/node-sdk';
 
-const setAuthData = (data: LoginResponseDto): void => {
+export const setAuthData = (data: LoginResponseDto): void => {
   localStorage.setItem(process.env.LOCAL_STORAGE_KEY as string, JSON.stringify(data));
 };
 

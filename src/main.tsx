@@ -1,4 +1,3 @@
-import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import './styles/tailwind.css';
@@ -6,11 +5,17 @@ import './styles/globals.scss';
 
 import App from './App.tsx';
 import ErrorBoundary from './components/error-boundary.tsx';
+import { ThemeProvider } from './components/Theme/theme-provider.tsx';
+import { Toaster } from './components/ui/sonner.tsx';
+import { UserStoreProvider } from '@/stores/user/userContext';
 
 createRoot(document.getElementById('root')!).render(
   <ErrorBoundary>
-    <StrictMode>
-      <App />
-    </StrictMode>
+    <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
+      <UserStoreProvider>
+        <App />
+        <Toaster />
+      </UserStoreProvider>
+    </ThemeProvider>
   </ErrorBoundary>,
 );

@@ -1,5 +1,6 @@
-@import './reset.scss';
-@import './font.scss';
+@use './reset.scss';
+@use './font.scss';
+@use './text.scss';
 
 *,
 html,

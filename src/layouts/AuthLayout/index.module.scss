@@ -2,8 +2,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
   height: 100vh;
-  background: url(/images/bg-auth.webp) no-repeat;
+  background: url(/images/auth-bg.webp);
   background-size: cover;
   background-position: center;
 }
