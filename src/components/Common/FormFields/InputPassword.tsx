@@ -64,14 +64,14 @@ export const InputPassword = <TFieldValues extends FieldValues>({
                 type='button'
                 variant='ghost'
                 size='sm'
-                className='absolute right-0 top-1/2 -translate-y-1/2 h-full px-3 py-2 hover:bg-transparent'
+                className='absolute right-0 top-1/2 -translate-y-1/2 h-full px-3 py-2'
                 onClick={() => setShowPassword((prev) => !prev)}
                 disabled={disablePasswordEye || disabled}
               >
                 {showPassword && !disablePasswordEye ? (
-                  <Eye className='h-5 w-5' aria-hidden='true' />
+                  <Eye className='h-5 w-5' />
                 ) : (
-                  <EyeOff className='h-5 w-5' aria-hidden='true' />
+                  <EyeOff className='h-5 w-5' />
                 )}
                 <span className='sr-only'>{showPassword ? 'Hide password' : 'Show password'}</span>
               </Button>

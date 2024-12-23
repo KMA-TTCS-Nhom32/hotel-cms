@@ -4,4 +4,7 @@ export const API_PATH = {
     REFRESH: '/auth/refresh',
     LOGOUT: '/auth/logout',
     PROFILE: '/auth/profile',
+
+    // Province
+    PROVINCES: '/provinces',
 }

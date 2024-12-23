@@ -1,36 +1,19 @@
 import { Suspense } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useMount } from 'ahooks';
+import { Outlet } from 'react-router-dom';
 
 import { useInitialProfile } from '@/stores/user/useInitialProfile';
-import { getAccessToken } from '@/stores/auth/utils';
-import { ROUTE_PATH } from '@/routes/route.constant';
-
-const AppContent = () => {
-  useInitialProfile();
-  return <Outlet />;
-};
+import LoadingSection from '@/components/Common/LoadingSection';
 
 const AppLayout = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  useInitialProfile();
+  const { loading } = useInitialProfile();
 
-  useMount(() => {
-    const isLogin = getAccessToken();
-    console.log('isLogin', isLogin);
-    if (!isLogin) {
-      return navigate(ROUTE_PATH.LOGIN);
-    }
-
-    if (location.pathname === '/') {
-      navigate(ROUTE_PATH.DASHBOARD);
-    }
-  });
+  if (loading) {
+    return <LoadingSection />;
+  }
 
   return (
     <Suspense fallback={undefined}>
-      <AppContent />
+      <Outlet />
     </Suspense>
   );
 };

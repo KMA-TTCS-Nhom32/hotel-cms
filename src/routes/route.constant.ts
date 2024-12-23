@@ -4,4 +4,7 @@ export const ROUTE_PATH = {
   BRANCH: '/branches',
   HOTEL: '/hotels',
   USER: '/users',
+
+  // staff routes
+  ROOMS: '/rooms',
 };

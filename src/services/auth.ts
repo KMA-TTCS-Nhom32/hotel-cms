@@ -1,5 +1,5 @@
 import { API_PATH } from '@/api/constant';
-import { request } from '@/api/request';
+import { privateRequest, request } from '@/api/request';
 import {
   LoginDto,
   LoginResponseDto,
@@ -13,13 +13,15 @@ export const loginService = (data: LoginDto) => {
 };
 
 export const logoutService = () => {
-  return request.post(API_PATH.LOGOUT);
+  return privateRequest(request.post, API_PATH.LOGOUT);
 };
 
 export const refreshService = (data: RefreshTokenDto) => {
-  return request.post<RefreshTokenResponseDto>(API_PATH.REFRESH, { data });
+  return privateRequest(request.post, API_PATH.REFRESH, {
+    data,
+  }) as Promise<RefreshTokenResponseDto>;
 };
 
 export const getProfileService = () => {
-  return request.get<User>(API_PATH.PROFILE);
+  return privateRequest(request.get, API_PATH.PROFILE) as Promise<User>;
 };

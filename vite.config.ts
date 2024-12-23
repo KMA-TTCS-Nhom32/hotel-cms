@@ -5,6 +5,19 @@ import EnvironmentPlugin from 'vite-plugin-environment';
 import HostQrCode from 'vite-host-qrcode/vite';
 import path from 'path';
 
+// List of problematic environment variables
+const problematicEnvVars = [
+  'CommonProgramFiles(x86)',
+  'ProgramFiles(x86)',
+  'IntelliJ IDEA Community Edition',
+  'IntelliJ IDEA',
+];
+
+// Remove the problematic environment variables
+problematicEnvVars.forEach((varName) => {
+  delete process.env[varName];
+});
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const isDev = mode !== 'production';
@@ -22,6 +35,14 @@ export default defineConfig(({ mode }) => {
     ],
     css: {
       devSourcemap: isDev,
+    },
+    optimizeDeps: {
+      include: ['react'],
+    },
+    build: {
+      commonjsOptions: {
+        include: [/node_modules/],
+      },
     },
     resolve: {
       alias: {

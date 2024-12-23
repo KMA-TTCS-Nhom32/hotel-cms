@@ -1,5 +1,9 @@
-import { Link } from 'react-router-dom';
-import { LayoutDashboard, GitBranch, Building2, Users, LogOut } from 'lucide-react';
+import { useMemo } from 'react';
+import { useRequest } from 'ahooks';
+import { toast } from 'sonner';
+import { Link, useLocation } from 'react-router-dom';
+import { LayoutDashboard, GitBranch, Building2, Users, LogOut, Bed } from 'lucide-react';
+
 import {
   Sidebar as ShadcnSidebar,
   SidebarContent,
@@ -14,29 +18,61 @@ import {
 import { Text } from '@/components/ui/text';
 import { ROUTE_PATH } from '@/routes/route.constant';
 import { useAuth } from '@/stores/auth/useAuth';
+import { useUserStore } from '@/stores/user/userContext';
+import { logoutService } from '@/services/auth';
+import { useTheme } from '@/components/Theme/theme-provider';
+import { cn } from '@/lib/utils';
 
-const menuItems = [
+export const adminItems = [
   { icon: LayoutDashboard, label: 'Dashboard', to: ROUTE_PATH.DASHBOARD },
-  { icon: GitBranch, label: 'Branches', to: ROUTE_PATH.BRANCH },
-  { icon: Building2, label: 'Hotels', to: ROUTE_PATH.HOTEL },
-  { icon: Users, label: 'Users', to: ROUTE_PATH.USER },
+  { icon: GitBranch, label: 'Chi nhánh', to: ROUTE_PATH.BRANCH },
+  { icon: Building2, label: 'Khách sạn', to: ROUTE_PATH.HOTEL },
+  { icon: Users, label: 'Người dùng', to: ROUTE_PATH.USER },
 ];
 
-export function Sidebar() {
-  const { onLogout } = useAuth();
+export const staffItems = [{ icon: Bed, label: 'Phòng', to: ROUTE_PATH.ROOMS }];
 
+const logo = {
+  light: '/logos/logo-large-light.png',
+  dark: '/logos/logo-large-dark.png',
+};
+
+export function Sidebar() {
+  const { user } = useUserStore((state) => state);
+  const { onLogout } = useAuth();
+  const { theme } = useTheme();
+  const location = useLocation();
+
+  const isAdmin = useMemo(() => {
+    return user?.role === 'ADMIN';
+  }, [user]);
+
+  const { run: handleLogout } = useRequest(logoutService, {
+    manual: true,
+    onSuccess: () => {
+      onLogout();
+    },
+    onError: () => {
+      toast.error('Đăng xuất thất bại. Có lỗi xảy ra');
+    },
+  });
+
+  const logoSrc = theme === 'light' ? logo.dark : logo.light;
+  console.log(location);
   return (
     <ShadcnSidebar>
-      <SidebarHeader>
-        <h2 className='text-xl font-bold px-4 py-3 text-center'>AHOMEVILLA CMS</h2>
+      <SidebarHeader className='flex items-center justify-center py-5'>
+        <img title='logo' alt='logo' src={logoSrc} className='h-10 w-auto' />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.label}>
-                  <SidebarMenuButton asChild>
+              {(isAdmin ? adminItems : staffItems).map((item) => (
+                <SidebarMenuItem key={item.to}>
+                  <SidebarMenuButton
+                    className={cn(location.pathname.includes(item.to) && 'bg-sidebar-accent')}
+                  >
                     <Link to={item.to} className='flex items-center gap-3'>
                       <item.icon className='h-5 w-5' />
                       <Text type='title1-semi-bold' className='!font-medium'>
@@ -53,7 +89,7 @@ export function Sidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={onLogout}>
+                <SidebarMenuButton onClick={handleLogout}>
                   <LogOut className='h-5 w-5' />
                   <Text type='title1-semi-bold' className='!font-medium'>
                     Logout
