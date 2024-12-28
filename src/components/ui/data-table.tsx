@@ -18,6 +18,7 @@ import {
   Row,
   Column,
   TableState,
+  RowModel,
 } from '@tanstack/react-table';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table';
@@ -46,12 +47,14 @@ import {
   EyeOff,
   MoreHorizontal,
   Settings2,
+  Trash,
 } from 'lucide-react';
 
 import EmptySection from '../Common/EmptySection';
 import TopSection, { TopSectionProps } from '../Common/TopSection';
 import { cn } from '@/lib/utils';
 import LoadingSection from '../Common/LoadingSection';
+import { useUpdateEffect } from 'ahooks';
 
 interface DataTableViewOptionsProps<TData> {
   table: TanstackTable<TData>;
@@ -204,13 +207,35 @@ export function DataTableRowActions<TData>({
 interface DataTableToolbarProps<TData> {
   table: TanstackTable<TData>;
   extraLeft?: React.ReactNode;
+  enableDeleteSelectedRows?: boolean;
+  deleteSelectedRows?: (data: RowModel<TData>) => void;
 }
 
-export function DataTableToolbar<TData>({ table, extraLeft }: DataTableToolbarProps<TData>) {
+export function DataTableToolbar<TData>({
+  table,
+  extraLeft,
+  enableDeleteSelectedRows = false,
+  deleteSelectedRows,
+}: DataTableToolbarProps<TData>) {
+  const handleDeleteSelectedRows = () => {
+    if (deleteSelectedRows) {
+      deleteSelectedRows(table.getFilteredSelectedRowModel());
+    }
+  };
+
   return (
     <div className='flex items-center justify-between'>
       <div className='flex items-center gap-4'>{extraLeft}</div>
-      <DataTableViewOptions table={table} />
+      <div className='flex items-center gap-4'>
+        {enableDeleteSelectedRows &&
+          (table.getIsSomeRowsSelected() || table.getIsAllRowsSelected()) && (
+            <Button variant='destructive' className='h-8 gap-3' onClick={handleDeleteSelectedRows}>
+              <Trash />
+              Xóa
+            </Button>
+          )}
+        <DataTableViewOptions table={table} />
+      </div>
     </div>
   );
 }
@@ -273,8 +298,11 @@ interface DataTableProps<TData, TValue> {
   page?: number;
   pageSize?: number;
   total?: number;
+  enableDeleteSelectedRows?: boolean;
+  deleteSelectedRows?: (data: RowModel<TData>) => void;
   onChangePage?: (page: number) => void;
   onRowClick?: (row: TData) => void;
+  onSortingChange?: (sorting: SortingState) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -286,20 +314,16 @@ export function DataTable<TData, TValue>({
   page = 0,
   pageSize = 10,
   total,
+  enableDeleteSelectedRows = false,
+  deleteSelectedRows,
   onChangePage,
   onRowClick,
+  onSortingChange,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
-
-  const states: Partial<TableState> = {
-    sorting,
-    columnVisibility,
-    rowSelection,
-    columnFilters,
-  };
 
   const table = useReactTable({
     data,
@@ -341,11 +365,18 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  console.log(data, table.getRowModel());
+  useUpdateEffect(() => {
+    onSortingChange?.(sorting);
+  }, [sorting]);
 
   return (
     <div className='space-y-4'>
-      <DataTableToolbar table={table} extraLeft={toolbarExtra} />
+      <DataTableToolbar
+        table={table}
+        extraLeft={toolbarExtra}
+        enableDeleteSelectedRows={enableDeleteSelectedRows}
+        deleteSelectedRows={deleteSelectedRows}
+      />
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
