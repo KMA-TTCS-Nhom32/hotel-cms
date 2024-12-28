@@ -3,7 +3,7 @@ import checker from 'vite-plugin-checker';
 import react from '@vitejs/plugin-react-swc';
 import EnvironmentPlugin from 'vite-plugin-environment';
 import HostQrCode from 'vite-host-qrcode/vite';
-import path from 'path';
+import * as path from 'path';
 
 // List of problematic environment variables
 const problematicEnvVars = [
