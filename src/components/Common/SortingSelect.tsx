@@ -6,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 
 export type SortingOption = {
   value: string;
@@ -15,9 +16,10 @@ export type SortingOption = {
 interface SortingSelectProps {
   orderByOptions: SortingOption[];
   onSortingChange: (orderBy: string, order: 'asc' | 'desc') => void;
+  className?: string;
 }
 
-export function SortingSelect({ orderByOptions, onSortingChange }: SortingSelectProps) {
+export function SortingSelect({ orderByOptions, onSortingChange, className }: Readonly<SortingSelectProps>) {
   const [orderBy, setOrderBy] = useState<string>('');
   const [order, setOrder] = useState<('asc' | 'desc') | undefined>(undefined);
 
@@ -25,7 +27,7 @@ export function SortingSelect({ orderByOptions, onSortingChange }: SortingSelect
     if (orderBy && order) {
       onSortingChange(orderBy, order);
     }
-  }, [orderBy, order, onSortingChange]);
+  }, [orderBy, order]);
 
   const handleOrderByChange = (value: string) => {
     setOrderBy(value);
@@ -33,7 +35,7 @@ export function SortingSelect({ orderByOptions, onSortingChange }: SortingSelect
   };
 
   return (
-    <div className='flex gap-3'>
+    <div className={cn('flex gap-3', className)}>
       <Select value={orderBy} onValueChange={handleOrderByChange}>
         <SelectTrigger className='w-[180px] h-10'>
           <SelectValue placeholder='Sort by' />

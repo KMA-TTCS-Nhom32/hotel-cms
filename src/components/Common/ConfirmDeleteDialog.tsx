@@ -10,6 +10,7 @@ interface ConfirmDeleteDialogProps {
   onConfirmDelete: () => void;
   children?: ReactNode;
   deleteLoading: boolean;
+  confirmText?: string;
 }
 
 const ConfirmDeleteDialog = ({
@@ -20,6 +21,7 @@ const ConfirmDeleteDialog = ({
   onConfirmDelete,
   children,
   deleteLoading,
+  confirmText = 'Xóa',
 }: ConfirmDeleteDialogProps) => {
   return (
     <Modal
@@ -29,9 +31,11 @@ const ConfirmDeleteDialog = ({
       header={header}
       footer={
         <div className='flex gap-4'>
-          <Button onClick={closeDelete}>Hủy</Button>
+          <Button variant='outline' onClick={closeDelete}>
+            Hủy
+          </Button>
           <Button variant='destructive' onClick={onConfirmDelete} disabled={deleteLoading}>
-            Xóa
+            {confirmText}
           </Button>
         </div>
       }
