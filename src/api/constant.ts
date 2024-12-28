@@ -7,4 +7,13 @@ export const API_PATH = {
 
     // Province
     PROVINCES: '/provinces',
+
+    // Branches
+    BRANCHES: '/branches',
+
+    // Amenities
+    AMENITIES: '/amenities',
+
+    // Images
+    IMAGES: '/images',
 }

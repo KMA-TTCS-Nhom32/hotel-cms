@@ -19,11 +19,19 @@ export const createProvinceService = (data: CreateProvinceDto) => {
 };
 
 export const updateProvinceService = (id: string, data: UpdateProvinceDto) => {
-  return privateRequest(request.put, `${API_PATH.PROVINCES}/${id}`, {
+  return privateRequest(request.patch, `${API_PATH.PROVINCES}/${id}`, {
     data,
   }) as Promise<Province>;
 };
 
 export const deleteProvinceService = (id: string) => {
   return privateRequest(request.delete, `${API_PATH.PROVINCES}/${id}`);
+};
+
+export const restoreProvinceService = (id: string) => {
+  return privateRequest(request.post, `${API_PATH.PROVINCES}/${id}/restore`);
+};
+
+export const getDeletedProvincesService = () => {
+  return privateRequest(request.get, `${API_PATH.PROVINCES}/deleted`) as Promise<Province[]>;
 };

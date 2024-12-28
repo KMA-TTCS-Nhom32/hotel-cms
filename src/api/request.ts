@@ -16,9 +16,6 @@ export const PREFIX_API = process.env.APP_API_URL;
 const request = extend({
   prefix: PREFIX_API,
   timeout: REQ_TIMEOUT,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 
   errorHandler: (error) => {
     const pathname = window.location.pathname;

@@ -8,23 +8,23 @@ export const RegexValidation = {
 export const loginSchema = z.object({
   emailOrPhone: z
     .string({
-      required_error: 'auth.required.email_or_phone',
+      required_error: 'Bạn cần nhập email hoặc số điện thoại',
     })
     .refine(
       (value) => {
         return RegexValidation.phone.test(value) || RegexValidation.email.test(value);
       },
       {
-        message: 'auth.validate.email_or_phone',
+        message: 'Email hoặc số điện thoại không hợp lệ',
       },
     ),
   password: z
     .string()
-    .min(8, { message: 'auth.validate.password_min_length' })
-    .regex(/[A-Z]/, { message: 'auth.validate.password_uppercase' })
-    .regex(/[a-z]/, { message: 'auth.validate.password_lowercase' })
-    .regex(/\d/, { message: 'auth.validate.password_digit' })
-    .regex(/[^A-Za-z0-9]/, { message: 'auth.validate.password_special' }),
+    .min(8, { message: 'Mật khẩu cần ít nhất 8 kí tự' })
+    .regex(/[A-Z]/, { message: 'Mật khẩu cần ít nhất 1 chữ in hoa' })
+    .regex(/[a-z]/, { message: 'Mật khẩu cần ít nhất 1 chữ thường' })
+    .regex(/\d/, { message: 'Mật khẩu cần ít nhất 1 số' })
+    .regex(/[^A-Za-z0-9]/, { message: 'Mật khẩu cần ít nhất 1 kí tự đặc biệt' }),
 });
 
 export type LoginFormValues = z.infer<typeof loginSchema>;
@@ -34,14 +34,14 @@ export const registerSchema = z
   .object({
     ...loginSchema.shape,
     confirmPassword: z.string({
-      required_error: 'auth.required.confirm_password',
+      required_error: 'Xác nhận mật khẩu không được để trống',
     }),
     name: z.string({
-      required_error: 'auth.required.name',
+      required_error: 'Tên không được để trống',
     }),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'auth.validate.password_match',
+    message: 'Mật khẩu không khớp',
     path: ['confirmPassword'], // path of error
   });
 
