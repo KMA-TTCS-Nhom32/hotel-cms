@@ -35,7 +35,7 @@ const CreateUpdateForm = ({ data, onRequestSuccess }: CreateUpdateFormProps) => 
     {
       manual: true,
       onSuccess: () => {
-        toast.success(`${data?.id ? 'Cập nhật' : 'Tạo mới'} tỉnh thành thành công!`);
+        toast.success(`${data?.id ? 'Cập nhật' : 'Tạo mới'} tỉnh/thành thành công!`);
         onRequestSuccess?.();
       },
       onError: (error) => {

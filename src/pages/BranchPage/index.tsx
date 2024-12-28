@@ -6,13 +6,14 @@ import { useNavigate } from 'react-router-dom';
 import TopSection from '@/components/Common/TopSection';
 import { DataTable, DataTableColumnHeader, DataTableRowActions } from '@/components/ui/data-table';
 import { Text } from '@/components/ui/text';
-import { getProvincesService } from '@/services/provinces';
+import { deleteProvinceService, getProvincesService } from '@/services/provinces';
 import { FilterProvincesDto, Province } from '@ahomevilla-hotel/node-sdk';
 import { ColumnDef } from '@tanstack/react-table';
 import { Modal } from '@/components/ui/modal';
-import CreateUpdateForm from './CreateUpdateForm';
+import CreateUpdateForm from './ProvinceForm';
 import { Button } from '@/components/ui/button';
 import { ROUTE_PATH } from '@/routes/route.constant';
+import ConfirmDeleteDialog from '@/components/Common/ConfirmDeleteDialog';
 
 const BranchPage = () => {
   const [selectedProvince, setSelectedProvince] = useState<Province | null>(null);
@@ -42,12 +43,23 @@ const BranchPage = () => {
     },
     {
       refreshDeps: [debouncedSearchTerm],
-
       onError: () => {
         toast.error('Lỗi khi lấy dữ liệu');
       },
     },
   );
+
+  const { run: handleDeleteProvince, loading: deleteLoading } = useRequest(deleteProvinceService, {
+    manual: true,
+    onSuccess: () => {
+      refresh();
+      closeDelete();
+      toast.success('Xóa tỉnh/thành thành công');
+    },
+    onError: () => {
+      toast.error('Có lỗi xảy ra khi xóa tỉnh/thành');
+    },
+  });
 
   const openUpdate = (province: Province) => {
     setSelectedProvince(province);
@@ -73,6 +85,12 @@ const BranchPage = () => {
     setOpenDeleteDialog(false);
   };
 
+  const onConfirmDelete = () => {
+    if (selectedProvince) {
+      handleDeleteProvince(selectedProvince.id);
+    }
+  };
+
   const onRequestSuccess = () => {
     refresh();
     closeCreateUpdate();
@@ -80,13 +98,13 @@ const BranchPage = () => {
 
   const onRowClick = (row: Province) => {
     navigate(`${ROUTE_PATH.HOTEL}?slug=${row.slug}`);
-  }
+  };
 
   const columns: ColumnDef<Province>[] = [
     {
       id: 'order',
       header: () => null,
-      cell: ({ row }) => <div>{row.index}</div>,
+      cell: ({ row }) => <div>{row.index + 1}</div>,
     },
     {
       accessorKey: 'name',
@@ -140,20 +158,15 @@ const BranchPage = () => {
         <CreateUpdateForm data={selectedProvince} onRequestSuccess={onRequestSuccess} />
       </Modal>
 
-      <Modal
-        isOpen={openDeleteDialog}
-        onClose={closeDelete}
+      <ConfirmDeleteDialog
         title='Xác nhận xóa tỉnh/thành'
-        header='Bạn có chắc chắn muốn xóa tỉnh/thành này không?'
-        footer={
-          <div className='flex gap-4'>
-            <Button onClick={closeDelete}>Hủy</Button>
-            <Button variant='destructive' onClick={closeDelete}>
-              Xóa
-            </Button>
-          </div>
-        }
-      />
+        openDeleteDialog={openDeleteDialog}
+        closeDelete={closeDelete}
+        onConfirmDelete={onConfirmDelete}
+        deleteLoading={deleteLoading}
+      >
+        <p>{`Bạn có chắc chắn muốn xóa tỉnh/thành ${selectedProvince?.name}?`}</p>
+      </ConfirmDeleteDialog>
     </div>
   );
 };
