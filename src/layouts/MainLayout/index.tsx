@@ -13,6 +13,7 @@ import { useUserStore } from '@/stores/user/userContext';
 import { Icons } from '@/components/Common/Icons';
 import { Hotel } from 'lucide-react';
 import HeaderBreadCrumbs from './HeaderBreadCrumbs';
+import { useBreadcrumbStore } from '@/stores/breadcrumbs/useBreadcrumbStore';
 
 const nestedRoutes = [{ icon: Hotel, label: 'Phòng', to: ROUTE_PATH.ROOMS }];
 
@@ -22,6 +23,7 @@ const MainLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useUserStore((state) => state);
+  const { breadcrumbs } = useBreadcrumbStore();
 
   useMount(() => {
     const isLogin = getAccessToken();
@@ -39,7 +41,7 @@ const MainLayout = () => {
     );
   }
 
-  const breadcrumbs = routes.filter((route) => location.pathname.includes(route.to));
+  const currentRoute = routes.find((route) => location.pathname.includes(route.to));
 
   return (
     <Suspense fallback={undefined}>
@@ -51,7 +53,12 @@ const MainLayout = () => {
             <Separator orientation='vertical' className='mr-2 h-4' />
             <ModeToggle />
             <Separator orientation='vertical' className='mr-2 h-4' />
-            <HeaderBreadCrumbs links={breadcrumbs} />
+            <HeaderBreadCrumbs
+              links={[
+                ...(currentRoute ? [{ to: currentRoute.to, label: currentRoute.label }] : []),
+                ...breadcrumbs,
+              ]}
+            />
           </header>
           <main className='w-full p-6'>
             <Outlet />

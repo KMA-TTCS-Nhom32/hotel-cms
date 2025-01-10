@@ -2,7 +2,15 @@ import { useMemo } from 'react';
 import { useRequest } from 'ahooks';
 import { toast } from 'sonner';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, GitBranch, Building2, Users, LogOut, Bed, HandPlatter } from 'lucide-react';
+import {
+  LayoutDashboard,
+  GitBranch,
+  Building2,
+  Users,
+  LogOut,
+  Bed,
+  HandPlatter,
+} from 'lucide-react';
 
 import {
   Sidebar as ShadcnSidebar,
@@ -71,16 +79,21 @@ export function Sidebar() {
             <SidebarMenu>
               {(isAdmin ? adminItems : staffItems).map((item) => (
                 <SidebarMenuItem key={item.to}>
-                  <SidebarMenuButton
-                    className={cn('py-3 h-auto', location.pathname.includes(item.to) && 'bg-sidebar-accent')}
-                  >
-                    <Link to={item.to} className='flex items-center gap-3'>
-                      <item.icon className='h-5 w-5' />
-                      <Text type='title1-semi-bold' className='!font-medium'>
-                        {item.label}
-                      </Text>
-                    </Link>
-                  </SidebarMenuButton>
+                  <Link to={item.to} className='w-full'>
+                    <SidebarMenuButton
+                      className={cn(
+                        'py-3 h-auto',
+                        location.pathname.includes(item.to) && 'bg-sidebar-accent',
+                      )}
+                    >
+                      <div className='flex items-center gap-3'>
+                        <item.icon className='h-5 w-5' />
+                        <Text type='title1-semi-bold' className='!font-medium'>
+                          {item.label}
+                        </Text>
+                      </div>
+                    </SidebarMenuButton>
+                  </Link>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>

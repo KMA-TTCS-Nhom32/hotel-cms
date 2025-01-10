@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { useDebounce, useRequest } from 'ahooks';
 import { useNavigate } from 'react-router-dom';
@@ -14,8 +14,10 @@ import CreateUpdateForm from './ProvinceForm';
 import { Button } from '@/components/ui/button';
 import { ROUTE_PATH } from '@/routes/route.constant';
 import ConfirmDeleteDialog from '@/components/Common/ConfirmDeleteDialog';
+import { useTranslationStore } from '@/stores/translation/useTranslationStore';
 
 const BranchPage = () => {
+  const { terms } = useTranslationStore((state) => state);
   const [selectedProvince, setSelectedProvince] = useState<Province | null>(null);
   const [openCreateUpdateDialog, setOpenCreateUpdateDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -60,6 +62,19 @@ const BranchPage = () => {
       toast.error('Có lỗi xảy ra khi xóa tỉnh/thành');
     },
   });
+
+  const provinces = useMemo(() => {
+    const terms_province_name = terms.filter((term) => term.term === 'province_name');
+
+    return provincesResponse?.data
+      ? provincesResponse.data.map((province) => ({
+          ...province,
+          name:
+            terms_province_name.find((term) => term.context === province.slug)?.translation
+              .content ?? province.name,
+        }))
+      : [];
+  }, [provincesResponse]);
 
   const openUpdate = (province: Province) => {
     setSelectedProvince(province);
@@ -138,7 +153,7 @@ const BranchPage = () => {
     <div className='w-full'>
       <DataTable
         columns={columns}
-        data={provincesResponse?.data ?? []}
+        data={provinces}
         loading={loading}
         onRowClick={onRowClick}
         toolbarExtra={

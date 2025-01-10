@@ -1,19 +1,22 @@
 export const API_PATH = {
-    // Auth
-    LOGIN: '/auth/login',
-    REFRESH: '/auth/refresh',
-    LOGOUT: '/auth/logout',
-    PROFILE: '/auth/profile',
+  // Auth
+  LOGIN: '/auth/login',
+  REFRESH: '/auth/refresh',
+  LOGOUT: '/auth/logout',
+  PROFILE: '/auth/profile',
 
-    // Province
-    PROVINCES: '/provinces',
+  // Province
+  PROVINCES: '/provinces',
 
-    // Branches
-    BRANCHES: '/branches',
+  // Branches
+  BRANCHES: '/branches',
 
-    // Amenities
-    AMENITIES: '/amenities',
+  // Amenities
+  AMENITIES: '/amenities',
 
-    // Images
-    IMAGES: '/images',
-}
+  // Images
+  IMAGES: '/images',
+
+  // POEditor
+  TRANSLATION_LIST: '/poeditor/translations-list',
+};

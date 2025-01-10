@@ -5,9 +5,10 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { BreadcrumbLinkItem } from '@/stores/breadcrumbs/useBreadcrumbStore';
 
 interface HeaderBreadCrumbsProps {
-  links: { label: string; to: string }[];
+  links: BreadcrumbLinkItem[];
 }
 
 const HeaderBreadCrumbs = ({ links }: HeaderBreadCrumbsProps) => {
@@ -17,7 +18,11 @@ const HeaderBreadCrumbs = ({ links }: HeaderBreadCrumbsProps) => {
         {links.map((link, index) => (
           <>
             <BreadcrumbItem key={index}>
-              <BreadcrumbLink href={link.to}>{link.label}</BreadcrumbLink>
+              {index === 0 ? (
+                <h4 className='text-base text-gray-400'>{link.label}</h4>
+              ) : (
+                <BreadcrumbLink href={link.to}>{link.label}</BreadcrumbLink>
+              )}
             </BreadcrumbItem>
             {index !== links.length - 1 && <BreadcrumbSeparator />}
           </>
