@@ -8,7 +8,7 @@ export interface CreateButtonProps {
 const CreateButton = ({ onClick }: CreateButtonProps) => {
   return (
     <Button onClick={onClick} className='h-auto px-4 min-h-10 rounded-full gap-3'>
-      <Plus className='h-6 w-6' />
+      <Plus className='!h-6 !w-6' />
       <span>Tạo mới</span>
     </Button>
   );

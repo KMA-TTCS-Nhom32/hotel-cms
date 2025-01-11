@@ -7,11 +7,12 @@ interface DialogComponent
     children?: React.ReactNode;
     onClickOutside?: () => void;
     header?: React.ReactNode;
+    className?: string;
   }> {
   useDialog: typeof useDialog;
 }
 
-export const DialogCustom: DialogComponent = ({ dialog, children, header }) => {
+export const DialogCustom: DialogComponent = ({ dialog, children, header, className }) => {
   const dialogInstance = useDialog(dialog);
 
   return (
@@ -21,6 +22,7 @@ export const DialogCustom: DialogComponent = ({ dialog, children, header }) => {
         dialogInstance?.close();
       }}
       header={header}
+      className={className}
     >
       <div>{children}</div>
     </Modal>

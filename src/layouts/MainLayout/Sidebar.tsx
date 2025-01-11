@@ -71,7 +71,7 @@ export function Sidebar() {
   });
 
   const logoSrc = theme === 'light' ? logo.dark : logo.light;
-  console.log(location);
+
   return (
     <ShadcnSidebar>
       <SidebarHeader className='flex items-center justify-center py-5'>
