@@ -5,23 +5,29 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { BreadcrumbLinkItem } from '@/stores/breadcrumbs/useBreadcrumbStore';
+import { BreadcrumbLinkItem, useBreadcrumbStore } from '@/stores/breadcrumbs/useBreadcrumbStore';
+import { useNavigate } from 'react-router-dom';
 
 interface HeaderBreadCrumbsProps {
   links: BreadcrumbLinkItem[];
 }
 
 const HeaderBreadCrumbs = ({ links }: HeaderBreadCrumbsProps) => {
+  const { onNavigate } = useBreadcrumbStore((state) => state);
+  const navigate = useNavigate();
+
   return (
     <Breadcrumb>
-      <BreadcrumbList>
+      <BreadcrumbList className='body2 text-gray-400'>
         {links.map((link, index) => (
           <>
             <BreadcrumbItem key={index}>
-              {index === 0 ? (
-                <h4 className='text-base text-gray-400'>{link.label}</h4>
+              {index !== links.length - 1 && links.length > 1 ? (
+                <button onClick={() => onNavigate(link.to, index, navigate)}>
+                  <BreadcrumbLink>{link.label}</BreadcrumbLink>
+                </button>
               ) : (
-                <BreadcrumbLink href={link.to}>{link.label}</BreadcrumbLink>
+                <BreadcrumbLink className='cursor-text'>{link.label}</BreadcrumbLink>
               )}
             </BreadcrumbItem>
             {index !== links.length - 1 && <BreadcrumbSeparator />}

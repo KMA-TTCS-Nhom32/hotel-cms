@@ -2,6 +2,7 @@ import { API_PATH } from '@/api/constant';
 import { privateRequest, request } from '@/api/request';
 import {
   Branch,
+  BranchDetail,
   BranchesPaginationResultDto,
   CreateBranchDto,
   QueryBranchesDto,
@@ -12,6 +13,10 @@ export const getBranchesService = (params: QueryBranchesDto) => {
   return privateRequest(request.get, API_PATH.BRANCHES, {
     params,
   }) as Promise<BranchesPaginationResultDto>;
+};
+
+export const getBranchDetailService = (idOrSlug: string) => {
+  return request.get<BranchDetail>(`${API_PATH.BRANCHES}/${idOrSlug}`);
 };
 
 export const createBranchService = (data: CreateBranchDto) => {

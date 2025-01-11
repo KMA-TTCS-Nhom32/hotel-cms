@@ -9,6 +9,7 @@ const DashboardPage = React.lazy(() => import('@/pages/DashboardPage'));
 const BranchPage = React.lazy(() => import('@/pages/BranchPage'));
 const HotelPage = React.lazy(() => import('@/pages/HotelPage'));
 const AmenityPage = React.lazy(() => import('@/pages/AmenityPage'));
+const HotelDetailPage = React.lazy(() => import('@/pages/HotelPage/HotelDetailPage'));
 
 import { ROUTE_PATH } from './route.constant';
 import MainLayout from '@/layouts/MainLayout';
@@ -45,6 +46,10 @@ export const router = createBrowserRouter([
           {
             path: ROUTE_PATH.AMENITY,
             element: <AmenityPage />
+          },
+          {
+            path: `${ROUTE_PATH.HOTEL}/:slug`,
+            element: <HotelDetailPage />
           }
         ],
       },

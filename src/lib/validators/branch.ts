@@ -39,3 +39,17 @@ export const branchSchema = z.object({
 });
 
 export type BranchFormValues = z.infer<typeof branchSchema>;
+
+const optionSchema = z.object({
+  label: z.string(),
+  value: z.string(),
+  disable: z.boolean().optional(),
+});
+
+export const updateBranchAmenitiesSchema = z.object({
+  amenities: z.array(optionSchema).min(1, {
+    message: 'Vui lòng chọn ít nhất một tiện ích',
+  }),
+});
+
+export type UpdateBranchAmenitiesFormValues = z.infer<typeof updateBranchAmenitiesSchema>;

@@ -27,7 +27,7 @@ const HotelCard = ({
   onOpenDeleteDialog,
   onOpenUpdateDialog,
 }: HotelCardProps) => {
-  const link = `${ROUTE_PATH.ROOMS}/${hotel.slug}`;
+  const link = `${ROUTE_PATH.HOTEL}/${hotel.slug}`;
 
   return (
     <Card className='w-full bg-sidebar p-0'>

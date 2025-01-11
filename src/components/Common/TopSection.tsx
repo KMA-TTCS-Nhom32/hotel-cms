@@ -25,7 +25,7 @@ const TopSection = ({
   const sideClass = side === 'left' ? 'justify-start' : 'justify-end';
 
   return (
-    <div className='w-full py-6'>
+    <div className='py-6'>
       <div className={cn('flex items-center gap-4', sideClass, className)}>
         {extra}
         <SearchBar

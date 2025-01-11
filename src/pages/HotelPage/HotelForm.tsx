@@ -4,13 +4,7 @@ import { useRequest } from 'ahooks';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Branch,
-  CreateBranchDto,
-  Image,
-  Province,
-  UpdateBranchDto,
-} from '@ahomevilla-hotel/node-sdk';
+import { Branch, CreateBranchDto, Image, UpdateBranchDto } from '@ahomevilla-hotel/node-sdk';
 
 import { BranchFormValues, branchSchema } from '@/lib/validators/branch';
 import { uploadImagesService } from '@/services/images';
@@ -43,6 +37,7 @@ import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { InputText } from '@/components/Common/FormFields';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
+import { SelectOption } from '@/components/Common/BasicSelect';
 
 // type Location = {
 //   latitude: number;
@@ -51,7 +46,7 @@ import { Button } from '@/components/ui/button';
 
 interface HotelFormProps {
   data: Branch | null;
-  provinces: Province[];
+  provinces: SelectOption[];
   onRequestSuccess?: () => void;
   onCancel: () => void;
 }
@@ -135,8 +130,8 @@ const HotelForm = ({ data, provinces, onRequestSuccess, onCancel }: HotelFormPro
                   </FormControl>
                   <SelectContent>
                     {provinces.map((province) => (
-                      <SelectItem key={province.id} value={province.id}>
-                        {province.name}
+                      <SelectItem key={province.id} value={province.id!}>
+                        {province.label}
                       </SelectItem>
                     ))}
                   </SelectContent>

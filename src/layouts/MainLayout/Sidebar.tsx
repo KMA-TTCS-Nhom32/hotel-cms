@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useRequest } from 'ahooks';
 import { toast } from 'sonner';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   GitBranch,
@@ -30,6 +30,7 @@ import { useUserStore } from '@/stores/user/userContext';
 import { logoutService } from '@/services/auth';
 import { useTheme } from '@/components/Theme/theme-provider';
 import { cn } from '@/lib/utils';
+import { useBreadcrumbStore } from '@/stores/breadcrumbs/useBreadcrumbStore';
 
 export const adminItems = [
   { icon: LayoutDashboard, label: 'Dashboard', to: ROUTE_PATH.DASHBOARD },
@@ -56,6 +57,9 @@ export function Sidebar() {
     return user?.role === 'ADMIN';
   }, [user]);
 
+  const navigate = useNavigate();
+  const { onNavigate } = useBreadcrumbStore((state) => state);
+
   const { run: handleLogout } = useRequest(logoutService, {
     manual: true,
     onSuccess: () => {
@@ -79,21 +83,20 @@ export function Sidebar() {
             <SidebarMenu>
               {(isAdmin ? adminItems : staffItems).map((item) => (
                 <SidebarMenuItem key={item.to}>
-                  <Link to={item.to} className='w-full'>
-                    <SidebarMenuButton
-                      className={cn(
-                        'py-3 h-auto',
-                        location.pathname.includes(item.to) && 'bg-sidebar-accent',
-                      )}
-                    >
-                      <div className='flex items-center gap-3'>
-                        <item.icon className='h-5 w-5' />
-                        <Text type='title1-semi-bold' className='!font-medium'>
-                          {item.label}
-                        </Text>
-                      </div>
-                    </SidebarMenuButton>
-                  </Link>
+                  <SidebarMenuButton
+                    className={cn(
+                      'py-3 h-auto',
+                      location.pathname.includes(item.to) && 'bg-sidebar-accent',
+                    )}
+                    onClick={() => onNavigate(item.to, 0, navigate)}
+                  >
+                    <div className='flex items-center gap-3'>
+                      <item.icon className='h-5 w-5' />
+                      <Text type='title1-semi-bold' className='!font-medium'>
+                        {item.label}
+                      </Text>
+                    </div>
+                  </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>

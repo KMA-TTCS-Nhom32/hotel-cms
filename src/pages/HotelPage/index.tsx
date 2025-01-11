@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import {
   Branch,
@@ -11,17 +11,18 @@ import { useDebounce, useRequest } from 'ahooks';
 import { toast } from 'sonner';
 
 import { deleteBranchService, getBranchesService, updateBranchService } from '@/services/branches';
-import { ROUTE_PATH } from '@/routes/route.constant';
-import { DefaultPaging } from '@/lib/constants';
 import { SortDto } from '@/lib/types';
 
 import TopSection from '@/components/Common/TopSection';
 import { getProvincesService } from '@/services/provinces';
 import LoadingSection from '@/components/Common/LoadingSection';
 import { Modal } from '@/components/ui/modal';
-import HotelForm from './HotelForm';
 import ConfirmDeleteDialog from '@/components/Common/ConfirmDeleteDialog';
 import { SortingOption, SortingSelect } from '@/components/Common/SortingSelect';
+import { PaginationComponent } from '@/components/ui/normal-pagination';
+import { BasicSelect, SelectOption } from '@/components/Common/BasicSelect';
+
+import HotelForm from './HotelForm';
 import HotelCard from './HotelCard';
 
 const options: SortingOption[] = [
@@ -40,7 +41,7 @@ const options: SortingOption[] = [
 ];
 
 const HotelPage = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const slug = useMemo(() => {
     return searchParams.get('slug');
   }, [searchParams]);
@@ -57,8 +58,6 @@ const HotelPage = () => {
     wait: 500,
   });
 
-  const navigate = useNavigate();
-
   const { data: provincesResponse } = useRequest(
     () => {
       return getProvincesService({
@@ -67,7 +66,6 @@ const HotelPage = () => {
       });
     },
     {
-      refreshDeps: [debouncedSearchTerm],
       onError: () => {
         toast.error('Lỗi khi lấy dữ liệu tỉnh/thành');
       },
@@ -82,7 +80,7 @@ const HotelPage = () => {
     () => {
       return getBranchesService({
         page,
-        pageSize: DefaultPaging.pageSize,
+        pageSize: 6,
         filters: JSON.stringify({
           keyword: searchTerm,
           provinceSlug: slug,
@@ -98,6 +96,16 @@ const HotelPage = () => {
       },
     },
   );
+
+  const provinceOptions: SelectOption[] = useMemo(() => {
+    return provincesResponse?.data
+      ? provincesResponse.data.map((province) => ({
+          id: province.id,
+          value: province.slug,
+          label: province.name,
+        }))
+      : [];
+  }, [provincesResponse]);
 
   const { run: handleDeleteHotel, loading: deleteLoading } = useRequest(deleteBranchService, {
     manual: true,
@@ -181,56 +189,76 @@ const HotelPage = () => {
     }
   };
 
-  const onNavigate = (row: Branch) => {
-    navigate(`${ROUTE_PATH.HOTEL}/${ROUTE_PATH.ROOMS}?slug=${row.slug}`);
+  const onChangeProvinceSlug = (slug: string) => {
+    setSearchParams({ slug });
   };
 
   return (
     <div className='w-full'>
-      <div className='w-full flex items-center'>
+      <div className='w-full flex items-center justify-between'>
         <TopSection
           placeholder='Tên chi nhánh/khách sạn...'
           value={searchTerm}
           onChange={setSearchTerm}
           onClick={openCreate}
+          className='w-auto'
         />
 
-        <SortingSelect
-          orderByOptions={options}
-          onSortingChange={(orderBy, order) => setSorting([{ orderBy, order }])}
-          className='ml-auto'
-        />
+        <div className='max-w-1/2 flex items-center gap-3'>
+          <BasicSelect
+            defaultValue={slug ?? undefined}
+            options={provinceOptions}
+            placeholder='Chọn khu vực'
+            onValueChange={onChangeProvinceSlug}
+          />
+
+          <SortingSelect
+            orderByOptions={options}
+            onSortingChange={(orderBy, order) => setSorting([{ orderBy, order }])}
+          />
+        </div>
       </div>
 
-      {!provincesResponse || loading ? (
+      {!provincesResponse || !branchPaginationResponse || loading ? (
         <LoadingSection />
       ) : (
-        <div className='grid grid-cols-3 gap-4'>
-          {branchPaginationResponse?.data.map((branch) => (
-            <HotelCard
-              key={branch.id}
-              hotel={branch}
-              onOpenChangeStatusDialog={() => openChangeStatus(branch)}
-              onOpenDeleteDialog={() => openDelete(branch)}
-              onOpenUpdateDialog={() => openUpdate(branch)}
-            />
-          ))}
+        <>
+          <div className='grid grid-cols-3 gap-4'>
+            {branchPaginationResponse.data.map((branch) => (
+              <HotelCard
+                key={branch.id}
+                hotel={branch}
+                onOpenChangeStatusDialog={() => openChangeStatus(branch)}
+                onOpenDeleteDialog={() => openDelete(branch)}
+                onOpenUpdateDialog={() => openUpdate(branch)}
+              />
+            ))}
 
-          <Modal
-            isOpen={openCreateUpdateDialog}
-            onClose={closeCreateUpdate}
-            title={selectedBranch ? 'Cập nhật khách sạn' : 'Tạo khách sạn mới'}
-            className='min-w-[600px]'
-            disableClickOutside
-          >
-            <HotelForm
-              data={selectedBranch}
-              onRequestSuccess={onRequestSuccess}
-              provinces={provincesResponse.data}
-              onCancel={closeCreateUpdate}
+            <Modal
+              isOpen={openCreateUpdateDialog}
+              onClose={closeCreateUpdate}
+              title={selectedBranch ? 'Cập nhật khách sạn' : 'Tạo khách sạn mới'}
+              className='min-w-[600px]'
+              disableClickOutside
+            >
+              <HotelForm
+                data={selectedBranch}
+                onRequestSuccess={onRequestSuccess}
+                provinces={provinceOptions}
+                onCancel={closeCreateUpdate}
+              />
+            </Modal>
+          </div>
+
+          <div className='w-full mt-3 flex justify-center'>
+            <PaginationComponent
+              page={page}
+              pageSize={6}
+              total={branchPaginationResponse.meta.total!}
+              onChangePage={setPage}
             />
-          </Modal>
-        </div>
+          </div>
+        </>
       )}
 
       <ConfirmDeleteDialog

@@ -35,7 +35,7 @@ export function SortingSelect({ orderByOptions, onSortingChange, className }: Re
   };
 
   return (
-    <div className={cn('flex gap-3', className)}>
+    <div className={cn('w-auto flex gap-3', className)}>
       <Select value={orderBy} onValueChange={handleOrderByChange}>
         <SelectTrigger className='w-[180px] h-10'>
           <SelectValue placeholder='Sort by' />

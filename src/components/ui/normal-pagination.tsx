@@ -35,6 +35,7 @@ export function PaginationComponent({
     }
 
     for (let i = startPage; i <= endPage; i++) {
+        console.log('isActive', i === page);
       pageNumbers.push(
         <PaginationItem key={i}>
           <PaginationLink
@@ -76,6 +77,7 @@ export function PaginationComponent({
                   e.preventDefault();
                   onChangePage(1);
                 }}
+                isActive={page === 1}
               >
                 1
               </PaginationLink>
@@ -96,6 +98,7 @@ export function PaginationComponent({
                   e.preventDefault();
                   onChangePage(totalPages);
                 }}
+                isActive={page === totalPages}
               >
                 {totalPages}
               </PaginationLink>
