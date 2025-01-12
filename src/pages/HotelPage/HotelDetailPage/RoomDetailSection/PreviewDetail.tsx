@@ -52,11 +52,13 @@ export const PreviewDetail = ({ data }: PreviewDetailProps) => {
       </CardHeader>
 
       <div className='flex'>
-        <ImageGalleryCarousel
-          slides={[data.thumbnail, ...data.images]}
-          className='rounded-none'
-          thumbContainerClassName='p-3 mt-0 bg-background'
-        />
+        <div className='h-auto bg-background'>
+          <ImageGalleryCarousel
+            slides={[data.thumbnail, ...data.images]}
+            className='rounded-none bg-background'
+            thumbContainerClassName='p-3 mt-0 bg-background'
+          />
+        </div>
         <div className='flex-1 relative'>
           <ScrollArea className='w-full h-full pr-2.5 -mr-2.5 max-h-[400px] hidden-scrollbar pb-16'>
             <div className='px-3 w-full space-y-5 pb-6'>
