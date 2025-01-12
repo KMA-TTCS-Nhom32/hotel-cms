@@ -19,4 +19,12 @@ export const API_PATH = {
 
   // POEditor
   TRANSLATION_LIST: '/poeditor/translations-list',
+
+  // Room Details
+  ROOM_DETAILS: '/room-details',
+
+  // Room Price Histories
+  ROOM_PRICE_HISTORIES: '/room-price-histories',
+  GET_ROOM_PRICE_HISTORIES: (roomDetailId: string) =>
+    '/room-price-histories/room-detail/' + roomDetailId,
 };

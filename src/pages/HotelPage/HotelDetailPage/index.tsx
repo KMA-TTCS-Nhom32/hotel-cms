@@ -46,9 +46,6 @@ const RoomDetailPage = () => {
   const { data: getAmenitiesResponse, loading: fetchingAmenities } = useRequest(() =>
     getAmenitiesService({
       pageSize: 100,
-      filters: JSON.stringify({
-        types: ['PROPERTY'],
-      }),
     }),
   );
 
@@ -62,10 +59,31 @@ const RoomDetailPage = () => {
     }));
   };
 
-  const amenityOtions: Option[] = useMemo(() => {
-    if (!getAmenitiesResponse) return [];
+  const amenityOtions: { hotel: Option[]; room: Option[] } = useMemo(() => {
+    if (!getAmenitiesResponse) return { hotel: [], room: [] };
 
-    return formatAmenities(getAmenitiesResponse.data);
+    const [hotelAmenities, roomAmenities] = getAmenitiesResponse.data.reduce(
+      (acc, amenity) => {
+        if (amenity.type === 'PROPERTY' || amenity.type === 'SERVICE') {
+          acc[0].push({
+            label: amenity.name,
+            value: amenity.id,
+          });
+        } else {
+          acc[1].push({
+            label: amenity.name,
+            value: amenity.id,
+          });
+        }
+        return acc;
+      },
+      [[], []] as [Option[], Option[]],
+    );
+
+    return {
+      hotel: hotelAmenities,
+      room: roomAmenities,
+    };
   }, [getAmenitiesResponse]);
 
   if (loading || fetchingAmenities) return <LoadingSection />;
@@ -139,14 +157,19 @@ const RoomDetailPage = () => {
         </CardContent>
       </Card>
 
-      <RoomDetailSection roomDetails={data.rooms} />
+      <RoomDetailSection
+        branchId={data.id}
+        roomDetails={data.rooms}
+        allRoomAmenities={amenityOtions.room}
+        refreshRequest={refresh}
+      />
 
       {/* Dialogs */}
       <DialogCustom dialog={updateAmenitiesDialog} header='Cập nhật tiện ích'>
         <UpdateAmenitiesForm
           branchId={data.id}
           currentAmenities={formatAmenities(data.amenities)}
-          allAmenities={amenityOtions}
+          allAmenities={amenityOtions.hotel}
           onCloseDialog={updateAmenitiesDialog.close}
           onSuccessfulUpdate={() => {
             updateAmenitiesDialog.close();

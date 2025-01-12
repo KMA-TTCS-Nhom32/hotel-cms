@@ -4,15 +4,44 @@ import { Text } from '@/components/ui/text';
 import { DialogCustom } from '@/components/Common/CustomDialog';
 import { useState } from 'react';
 import CreateButton from '@/components/Common/CreateButton';
+import { Option } from '@/components/ui/multiple-selector';
+import { CreateUpdateRoomDetailForm } from './CreateUpdateRoomDetailForm';
+import { RoomDetailCard } from './RoomDetailCard';
+import { UpdatePriceForm } from './UpdatePriceForm';
 
 interface RoomDetailSectionProps {
+  branchId: string;
   roomDetails: RoomDetail[];
+  allRoomAmenities: Option[];
+  refreshRequest: () => void;
 }
 
-export const RoomDetailSection = ({ roomDetails }: RoomDetailSectionProps) => {
+export const RoomDetailSection = ({
+  branchId,
+  roomDetails,
+  allRoomAmenities,
+  refreshRequest,
+}: RoomDetailSectionProps) => {
   const [selectedRoom, setSelectedRoom] = useState<RoomDetail | null>(null);
 
   const createUpdateDialog = DialogCustom.useDialog();
+  const updatePriceDialog = DialogCustom.useDialog();
+  const previewDialog = DialogCustom.useDialog();
+
+  const openUpdate = (roomDetail: RoomDetail) => {
+    setSelectedRoom(roomDetail);
+    createUpdateDialog.open();
+  };
+
+  const openUpdatePrice = (roomDetail: RoomDetail) => {
+    setSelectedRoom(roomDetail);
+    updatePriceDialog.open();
+  };
+
+  const openPreview = (roomDetail: RoomDetail) => {
+    setSelectedRoom(roomDetail);
+    previewDialog.open();
+  };
 
   return (
     <div className='w-full mt-8'>
@@ -21,12 +50,55 @@ export const RoomDetailSection = ({ roomDetails }: RoomDetailSectionProps) => {
         <CreateButton onClick={createUpdateDialog.open} />
       </div>
 
+      <div className='mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
+        {roomDetails.map((roomDetail) => (
+          <RoomDetailCard
+            key={roomDetail.id}
+            data={roomDetail}
+            onOpenUpdateDialog={() => openUpdate(roomDetail)}
+            onOpenUpdatePriceDialog={() => openUpdatePrice(roomDetail)}
+            onOpenPreviewDialog={() => openPreview(roomDetail)}
+          />
+        ))}
+      </div>
+
       <DialogCustom
         dialog={createUpdateDialog}
         header={selectedRoom ? 'Cập nhật thông tin loại phòng' : 'Tạo loại phòng'}
         className='min-w-[800px]'
       >
-        <div>Content</div>
+        <CreateUpdateRoomDetailForm
+          branchId={branchId}
+          data={selectedRoom}
+          allAmenities={allRoomAmenities}
+          onCancelDialog={createUpdateDialog.close}
+          onSuccessfullRequest={() => {
+            createUpdateDialog.close();
+            refreshRequest();
+          }}
+        />
+      </DialogCustom>
+
+      <DialogCustom
+        dialog={updatePriceDialog}
+        header='Cập nhật giá phòng'
+        className='min-w-[800px]'
+      >
+        {selectedRoom && (
+          <UpdatePriceForm
+            branchId={branchId}
+            data={selectedRoom}
+            onCloseDialog={updatePriceDialog.close}
+            onFinishedUpdate={() => {
+              updatePriceDialog.close();
+              refreshRequest();
+            }}
+          />
+        )}
+      </DialogCustom>
+
+      <DialogCustom dialog={previewDialog} header='Preview' className='min-w-[800px]'>
+        day la preview
       </DialogCustom>
     </div>
   );
