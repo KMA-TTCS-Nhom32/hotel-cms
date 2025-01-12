@@ -1,0 +1,15 @@
+.custom-line-through {
+  position: relative;
+  text-decoration: none;
+}
+
+.custom-line-through::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background-color: currentColor;
+  opacity: 0.5;
+}

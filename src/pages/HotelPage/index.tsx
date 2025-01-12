@@ -223,7 +223,7 @@ const HotelPage = () => {
         <LoadingSection />
       ) : (
         <>
-          <div className='grid grid-cols-3 gap-4'>
+          <div className='grid grid-cols-3 3xl:grid-cols-4 gap-4'>
             {branchPaginationResponse.data.map((branch) => (
               <HotelCard
                 key={branch.id}

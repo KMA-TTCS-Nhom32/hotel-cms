@@ -8,6 +8,7 @@ import { Option } from '@/components/ui/multiple-selector';
 import { CreateUpdateRoomDetailForm } from './CreateUpdateRoomDetailForm';
 import { RoomDetailCard } from './RoomDetailCard';
 import { UpdatePriceForm } from './UpdatePriceForm';
+import { PreviewDetail } from './PreviewDetail';
 
 interface RoomDetailSectionProps {
   branchId: string;
@@ -50,7 +51,7 @@ export const RoomDetailSection = ({
         <CreateButton onClick={createUpdateDialog.open} />
       </div>
 
-      <div className='mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
+      <div className='mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4 gap-4'>
         {roomDetails.map((roomDetail) => (
           <RoomDetailCard
             key={roomDetail.id}
@@ -97,8 +98,8 @@ export const RoomDetailSection = ({
         )}
       </DialogCustom>
 
-      <DialogCustom dialog={previewDialog} header='Preview' className='min-w-[800px]'>
-        day la preview
+      <DialogCustom dialog={previewDialog} className='w-full max-w-[1024px] p-0'>
+        {selectedRoom && <PreviewDetail data={selectedRoom} />}
       </DialogCustom>
     </div>
   );

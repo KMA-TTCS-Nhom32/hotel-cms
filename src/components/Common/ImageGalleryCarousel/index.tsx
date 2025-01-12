@@ -5,13 +5,23 @@ import useEmblaCarousel from 'embla-carousel-react';
 
 import { Image } from '@ahomevilla-hotel/node-sdk';
 import { ImageThumbButton } from './ImageThumbButton';
+import { cn } from '@/lib/utils';
 
 interface ImageGalleryCarouselProps {
   slides: Image[];
   options?: EmblaOptionsType;
+  className?: string;
+  thumbClassName?: string;
+  thumbContainerClassName?: string;
 }
 
-const ImageGalleryCarousel = ({ slides, options }: ImageGalleryCarouselProps) => {
+const ImageGalleryCarousel = ({
+  slides,
+  options,
+  className,
+  thumbClassName,
+  thumbContainerClassName,
+}: ImageGalleryCarouselProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [emblaMainRef, emblaMainApi] = useEmblaCarousel(options);
   const [emblaThumbsRef, emblaThumbsApi] = useEmblaCarousel({
@@ -53,7 +63,12 @@ const ImageGalleryCarousel = ({ slides, options }: ImageGalleryCarouselProps) =>
               className='min-w-0 flex-[0_0_100%] pl-4'
               style={{ transform: 'translate3d(0, 0, 0)' }}
             >
-              <div className='rounded-xl flex h-[300px] select-none shadow-md overflow-hidden'>
+              <div
+                className={cn(
+                  'rounded-xl flex h-[300px] select-none shadow-md overflow-hidden',
+                  className,
+                )}
+              >
                 <img
                   src={slide.url}
                   alt='slide'
@@ -66,7 +81,7 @@ const ImageGalleryCarousel = ({ slides, options }: ImageGalleryCarouselProps) =>
       </div>
 
       {/* thumbs */}
-      <div className='mt-3'>
+      <div className={cn('mt-3', thumbContainerClassName)}>
         <div className='overflow-hidden' ref={emblaThumbsRef}>
           <div className='flex flex-row ml-[calc(0.75rem*-1)]'>
             {slides.map((slide, index) => (
@@ -75,6 +90,7 @@ const ImageGalleryCarousel = ({ slides, options }: ImageGalleryCarouselProps) =>
                 onClick={() => onThumbClick(index)}
                 selected={index === selectedIndex}
                 src={slide.url}
+                className={thumbClassName}
               />
             ))}
           </div>
