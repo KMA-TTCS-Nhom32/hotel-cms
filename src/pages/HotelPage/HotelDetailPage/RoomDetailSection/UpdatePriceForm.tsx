@@ -48,9 +48,10 @@ export const UpdatePriceForm = ({
       roomPriceHistories: data.roomPriceHistories
         ? data.roomPriceHistories.map((history) => ({
             ...history,
-            price_per_hour: history.price_per_hour ? Number(history.price_per_hour) : 0,
-            price_per_night: history.price_per_night ? Number(history.price_per_night) : 0,
-            price_per_day: history.price_per_day ? Number(history.price_per_day) : 0,
+            effective_to: history.effective_to ? history.effective_to : undefined,
+            price_per_hour: history.price_per_hour ? Number(history.price_per_hour) : null,
+            price_per_night: history.price_per_night ? Number(history.price_per_night) : null,
+            price_per_day: history.price_per_day ? Number(history.price_per_day) : null,
           }))
         : null,
     },
@@ -124,7 +125,10 @@ export const UpdatePriceForm = ({
           name: history.name,
           description: history.description,
           effective_from: history.effective_from,
-          effective_to: history.effective_to,
+          effective_to:
+            history.effective_to && history.effective_to.length > 0
+              ? history.effective_to
+              : undefined,
           price_per_hour:
             history.price_per_hour && history.price_per_hour !== 0
               ? String(history.price_per_hour)
@@ -266,7 +270,7 @@ export const UpdatePriceForm = ({
                         </div>
                       </div>
                       <div
-                        className={cn('w-full grid', fields.length > 1 && 'grid-cols-[1fr_40px]')}
+                        className={cn('w-full grid', fields.length > 1 && 'grid-cols-[1fr_40px] gap-3')}
                       >
                         <div className='grid grid-cols-3 gap-3'>
                           <FormItem>
@@ -300,7 +304,7 @@ export const UpdatePriceForm = ({
                           </FormItem>
                         </div>
                         {fields.length > 1 && (
-                          <Button variant='destructive' type='button' onClick={() => remove(index)}>
+                          <Button variant='destructive' type='button' className='mt-auto' onClick={() => remove(index)}>
                             <Trash className='!w-5 !h-5' />
                           </Button>
                         )}
@@ -317,10 +321,10 @@ export const UpdatePriceForm = ({
                           name: '',
                           description: '',
                           effective_from: '',
-                          effective_to: '',
-                          price_per_hour: 0,
-                          price_per_night: 0,
-                          price_per_day: 0,
+                          effective_to: undefined,
+                          price_per_hour: null,
+                          price_per_night: null,
+                          price_per_day: null,
                         });
                       }
                     }}
