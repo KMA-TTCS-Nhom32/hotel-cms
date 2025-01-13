@@ -122,24 +122,28 @@ const BranchPage = () => {
       cell: ({ row }) => <div>{row.index + 1}</div>,
     },
     {
+      id: 'Tỉnh/thành',
       accessorKey: 'name',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Tỉnh/thành' />,
       cell: ({ row }) => <Text type='title1-semi-bold'>{row.original.name}</Text>,
     },
     {
+      id: 'Zipcode',
       accessorKey: 'zip_code',
       header: () => <span className='text-base'>Zipcode</span>,
       cell: ({ row }) => <p>{row.original.zip_code}</p>,
     },
     {
+      id: 'Slug',
       accessorKey: 'slug',
       header: () => <span className='text-base'>Slug</span>,
       cell: ({ row }) => <p>{row.original.slug}</p>,
     },
     {
+      id: 'Số lượng chi nhánh',
       accessorKey: 'branch_count',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Số lượng chi nhánh' />,
-      cell: ({ row }) => <Text type='title1-semi-bold'>{row.original.name}</Text>,
+      cell: ({ row }) => <Text type='title1-semi-bold'>{row.original._count?.branches}</Text>,
     },
     {
       id: 'actions',
@@ -156,7 +160,7 @@ const BranchPage = () => {
         data={provinces}
         loading={loading}
         onRowClick={onRowClick}
-        toolbarExtra={
+        extraLeft={
           <TopSection
             placeholder='Tên tỉnh/thành...'
             value={searchTerm}

@@ -189,7 +189,7 @@ const AmenityPage = () => {
         onSortingChange={setSorting}
         enableDeleteSelectedRows
         deleteSelectedRows={onDeleteSelectedRows}
-        toolbarExtra={
+        extraLeft={
           <TopSection
             placeholder='Tên tiện ích...'
             value={searchTerm}

@@ -48,6 +48,7 @@ import {
   MoreHorizontal,
   Settings2,
   Trash,
+  X,
 } from 'lucide-react';
 
 import EmptySection from '../Common/EmptySection';
@@ -55,6 +56,9 @@ import TopSection, { TopSectionProps } from '../Common/TopSection';
 import { cn } from '@/lib/utils';
 import LoadingSection from '../Common/LoadingSection';
 import { useUpdateEffect } from 'ahooks';
+import { Input } from './input';
+import { SelectOption } from '../Common/BasicSelect';
+import { DataTableFacetedFilter } from './data-table-faceted-filter';
 
 interface DataTableViewOptionsProps<TData> {
   table: TanstackTable<TData>;
@@ -204,11 +208,21 @@ export function DataTableRowActions<TData>({
   );
 }
 
+type FilterField = {
+  key: string;
+  title: string;
+  options: SelectOption[];
+};
+
 interface DataTableToolbarProps<TData> {
   table: TanstackTable<TData>;
   extraLeft?: React.ReactNode;
   enableDeleteSelectedRows?: boolean;
   deleteSelectedRows?: (data: RowModel<TData>) => void;
+  enableBuiltinFilter?: boolean;
+  builtinFilterPlaceholder?: string;
+  builtinFilterSearchKey?: string;
+  filterFields?: FilterField[];
 }
 
 export function DataTableToolbar<TData>({
@@ -216,7 +230,13 @@ export function DataTableToolbar<TData>({
   extraLeft,
   enableDeleteSelectedRows = false,
   deleteSelectedRows,
-}: DataTableToolbarProps<TData>) {
+  enableBuiltinFilter = false,
+  builtinFilterPlaceholder = 'Tìm kiếm...',
+  builtinFilterSearchKey = 'name',
+  filterFields = [],
+}: Readonly<DataTableToolbarProps<TData>>) {
+  const isFiltered = table.getState().columnFilters.length > 0;
+
   const handleDeleteSelectedRows = () => {
     if (deleteSelectedRows) {
       deleteSelectedRows(table.getFilteredSelectedRowModel());
@@ -225,7 +245,38 @@ export function DataTableToolbar<TData>({
 
   return (
     <div className='flex items-center justify-between'>
-      <div className='flex items-center gap-4'>{extraLeft}</div>
+      <div className='flex items-center gap-4'>
+        {extraLeft}
+        {enableBuiltinFilter && (
+          <Input
+            placeholder={builtinFilterPlaceholder}
+            value={(table.getColumn(builtinFilterSearchKey)?.getFilterValue() as string) ?? ''}
+            onChange={(event) => table.getColumn(builtinFilterSearchKey)?.setFilterValue(event.target.value)}
+            className='h-8 w-[150px] lg:w-[250px]'
+          />
+        )}
+        {filterFields.map((field) => (
+          <>
+            {table.getColumn(field.key) && (
+              <DataTableFacetedFilter
+                column={table.getColumn(field.key)}
+                title={field.title}
+                options={field.options}
+              />
+            )}
+          </>
+        ))}
+        {isFiltered && (
+          <Button
+            variant='ghost'
+            onClick={() => table.resetColumnFilters()}
+            className='h-8 px-2 lg:px-3'
+          >
+            Reset
+            <X />
+          </Button>
+        )}
+      </div>
       <div className='flex items-center gap-4'>
         {enableDeleteSelectedRows &&
           (table.getIsSomeRowsSelected() || table.getIsAllRowsSelected()) && (
@@ -289,10 +340,9 @@ export function DataTableColumnHeader<TData, TValue>({
   );
 }
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData, TValue> extends Omit<DataTableToolbarProps<TData>, 'table'> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  toolbarExtra?: React.ReactNode;
   loading?: boolean;
   manualPagination?: boolean;
   page?: number;
@@ -308,18 +358,17 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   columns,
   data,
-  toolbarExtra,
   loading,
   manualPagination = false,
   page = 0,
   pageSize = 10,
   total,
   enableDeleteSelectedRows = false,
-  deleteSelectedRows,
   onChangePage,
   onRowClick,
   onSortingChange,
-}: DataTableProps<TData, TValue>) {
+  ...props
+}: Readonly<DataTableProps<TData, TValue>>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -373,9 +422,8 @@ export function DataTable<TData, TValue>({
     <div className='space-y-4'>
       <DataTableToolbar
         table={table}
-        extraLeft={toolbarExtra}
         enableDeleteSelectedRows={enableDeleteSelectedRows}
-        deleteSelectedRows={deleteSelectedRows}
+        {...props}
       />
       <div className='rounded-md border'>
         <Table>

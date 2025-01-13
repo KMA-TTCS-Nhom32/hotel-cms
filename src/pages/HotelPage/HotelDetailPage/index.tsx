@@ -20,6 +20,9 @@ import { Option } from '@/components/ui/multiple-selector';
 import { UpdateNearByForm } from './UpdateNearByForm';
 import { RoomDetailSection } from './RoomDetailSection';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { RoomListSection } from './RoomListSection';
+import { NotFoundSection } from '@/components/Common/NotFoundSection';
 
 const RoomDetailPage = () => {
   const params = useParams<{ slug: string }>();
@@ -88,7 +91,7 @@ const RoomDetailPage = () => {
 
   if (loading || fetchingAmenities) return <LoadingSection />;
 
-  if (!data) return <div>Không tìm thấy chi nhánh</div>;
+  if (!data) return <NotFoundSection content='Không tìm thấy chi nhánh' />;
 
   const editButton = (length: number, onClick: () => void) => {
     return (
@@ -157,12 +160,27 @@ const RoomDetailPage = () => {
         </CardContent>
       </Card>
 
-      <RoomDetailSection
-        branchId={data.id}
-        roomDetails={data.rooms}
-        allRoomAmenities={amenityOtions.room}
-        refreshRequest={refresh}
-      />
+      <Tabs defaultValue='room-detail' className='w-full mt-6'>
+        <TabsList className='grid w-full grid-cols-2 h-auto'>
+          <TabsTrigger value='room-detail' className='py-2'>
+            <Text type='title1-semi-bold'>Loại Phòng</Text>
+          </TabsTrigger>
+          <TabsTrigger value='room' className='py-2'>
+            <Text type='title1-semi-bold'>Danh sách phòng</Text>
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value='room-detail'>
+          <RoomDetailSection
+            branchId={data.id}
+            roomDetails={data.rooms}
+            allRoomAmenities={amenityOtions.room}
+            refreshRequest={refresh}
+          />
+        </TabsContent>
+        <TabsContent value='room'>
+          <RoomListSection branchId={data.id} roomDetails={data.rooms} />
+        </TabsContent>
+      </Tabs>
 
       {/* Dialogs */}
       <DialogCustom dialog={updateAmenitiesDialog} header='Cập nhật tiện ích'>

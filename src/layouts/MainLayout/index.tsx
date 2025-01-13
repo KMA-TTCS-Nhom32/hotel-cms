@@ -48,7 +48,7 @@ const MainLayout = () => {
       <SidebarProvider>
         <Sidebar />
         <SidebarInset>
-          <header className='flex h-16 shrink-0 items-center gap-2 border-b px-6'>
+          <header className='w-full max-w-[1240px] mx-auto flex h-16 shrink-0 items-center gap-2 border-b xl:px-4 3xl:px-6'>
             <SidebarTrigger className='-ml-1' />
             <Separator orientation='vertical' className='mr-2 h-4' />
             <ModeToggle />
@@ -60,7 +60,7 @@ const MainLayout = () => {
               ]}
             />
           </header>
-          <main className='w-full p-6'>
+          <main className='w-full max-w-[1240px] mx-auto xl:px-4 3xl:p-6'>
             <Outlet />
           </main>
         </SidebarInset>

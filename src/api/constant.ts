@@ -27,4 +27,7 @@ export const API_PATH = {
   ROOM_PRICE_HISTORIES: '/room-price-histories',
   GET_ROOM_PRICE_HISTORIES: (roomDetailId: string) =>
     '/room-price-histories/room-detail/' + roomDetailId,
+
+  // Rooms
+  ROOMS: '/rooms',
 };
