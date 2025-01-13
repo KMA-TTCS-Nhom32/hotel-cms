@@ -251,7 +251,9 @@ export function DataTableToolbar<TData>({
           <Input
             placeholder={builtinFilterPlaceholder}
             value={(table.getColumn(builtinFilterSearchKey)?.getFilterValue() as string) ?? ''}
-            onChange={(event) => table.getColumn(builtinFilterSearchKey)?.setFilterValue(event.target.value)}
+            onChange={(event) =>
+              table.getColumn(builtinFilterSearchKey)?.setFilterValue(event.target.value)
+            }
             className='h-8 w-[150px] lg:w-[250px]'
           />
         )}
@@ -348,7 +350,6 @@ interface DataTableProps<TData, TValue> extends Omit<DataTableToolbarProps<TData
   page?: number;
   pageSize?: number;
   total?: number;
-  enableDeleteSelectedRows?: boolean;
   deleteSelectedRows?: (data: RowModel<TData>) => void;
   onChangePage?: (page: number) => void;
   onRowClick?: (row: TData) => void;
@@ -363,7 +364,6 @@ export function DataTable<TData, TValue>({
   page = 0,
   pageSize = 10,
   total,
-  enableDeleteSelectedRows = false,
   onChangePage,
   onRowClick,
   onSortingChange,
@@ -420,11 +420,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className='space-y-4'>
-      <DataTableToolbar
-        table={table}
-        enableDeleteSelectedRows={enableDeleteSelectedRows}
-        {...props}
-      />
+      <DataTableToolbar table={table} {...props} />
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
@@ -443,33 +439,36 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {loading && (
+            {loading ? (
               <TableRow>
                 <TableCell colSpan={columns.length} className='h-40 text-center'>
                   <LoadingSection />
                 </TableCell>
               </TableRow>
-            )}
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                  onClick={() => onRowClick?.(row.original)}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
             ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className='h-40 text-center'>
-                  <EmptySection />
-                </TableCell>
-              </TableRow>
+              <>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && 'selected'}
+                      onClick={() => onRowClick?.(row.original)}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={columns.length} className='h-40 text-center'>
+                      <EmptySection />
+                    </TableCell>
+                  </TableRow>
+                )}
+              </>
             )}
           </TableBody>
         </Table>

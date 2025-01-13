@@ -2,7 +2,7 @@ import { DialogDescription } from '@radix-ui/react-dialog';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from './dialog';
 
 interface ModalProps {
-  title?: string;
+  title?: string | React.ReactNode;
   description?: string;
   isOpen: boolean;
   onClose: () => void;

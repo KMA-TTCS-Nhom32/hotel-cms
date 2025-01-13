@@ -154,6 +154,7 @@ const AmenityPage = () => {
       ),
     },
     {
+      id: 'Tên tiện ích',
       accessorKey: 'name',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Tên tiện ích' />,
       cell: ({ row }) => <Text type='title1-semi-bold'>{row.original.name}</Text>,
@@ -164,6 +165,7 @@ const AmenityPage = () => {
       cell: ({ row }) => <p>{row.original.slug}</p>,
     },
     {
+      id: 'Loại',
       accessorKey: 'type',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Loại' />,
       cell: ({ row }) => <Text type='title1-semi-bold'>{row.original.type}</Text>,

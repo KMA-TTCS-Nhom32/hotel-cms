@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { HotelRoom, RoomDetail } from '@ahomevilla-hotel/node-sdk';
 import { useRequest } from 'ahooks';
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, RowModel } from '@tanstack/react-table';
 import { toast } from 'sonner';
 
 import { RoomStatusOptions } from '@/constants';
@@ -13,6 +13,7 @@ import { DataTable, DataTableColumnHeader, DataTableRowActions } from '@/compone
 import { Text } from '@/components/ui/text';
 import CreateButton from '@/components/Common/CreateButton';
 import { CreateUpdateRoomForm } from './CreateUpdateRoomForm';
+import ConfirmDeleteDialog from '@/components/Common/ConfirmDeleteDialog';
 
 interface RoomListSectionProps {
   branchId: string;
@@ -21,6 +22,7 @@ interface RoomListSectionProps {
 
 export const RoomListSection = ({ branchId, roomDetails }: RoomListSectionProps) => {
   const [selectedRoom, setSelectedRoom] = useState<HotelRoom | null>(null);
+  const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
   const createUpdateDialog = DialogCustom.useDialog();
   const deleteDialog = DialogCustom.useDialog();
 
@@ -31,18 +33,24 @@ export const RoomListSection = ({ branchId, roomDetails }: RoomListSectionProps)
       toast.error('Lỗi khi lấy dữ liệu');
     },
   });
-  console.log(data);
-  const { run: handleDeleteHotelRoom, loading: deleteLoading } = useRequest(softDeleteRoomService, {
-    manual: true,
-    onSuccess: () => {
-      refresh();
-      closeDelete();
-      toast.success('Xóa phòng thành công');
+
+  const { run: handleDeleteHotelRooms, loading: deleteLoading } = useRequest(
+    (ids: string[]) => {
+      const promises = ids.map((id) => softDeleteRoomService(id));
+      return Promise.all(promises);
     },
-    onError: () => {
-      toast.error('Có lỗi xảy ra khi xóa phòng');
+    {
+      manual: true,
+      onSuccess: () => {
+        refresh();
+        closeDelete();
+        toast.success('Xóa phòng thành công');
+      },
+      onError: () => {
+        toast.error('Có lỗi xảy ra khi xóa phòng');
+      },
     },
-  });
+  );
 
   const openCreate = () => {
     createUpdateDialog.open();
@@ -59,6 +67,8 @@ export const RoomListSection = ({ branchId, roomDetails }: RoomListSectionProps)
   };
 
   const openDelete = (room: HotelRoom) => {
+    console.log('room', room);
+    console.log(deleteDialog.isOpen);
     setSelectedRoom(room);
     deleteDialog.open();
   };
@@ -66,6 +76,20 @@ export const RoomListSection = ({ branchId, roomDetails }: RoomListSectionProps)
   const closeDelete = () => {
     setSelectedRoom(null);
     deleteDialog.close();
+  };
+
+  const onDeleteSelectedRows = (data: RowModel<HotelRoom>) => {
+    const ids = data.rows.map((item) => item.original.id);
+    setIdsToDelete(ids);
+    deleteDialog.open();
+  };
+
+  const onConfirmDelete = () => {
+    if (!selectedRoom) {
+      handleDeleteHotelRooms(idsToDelete);
+      return;
+    }
+    handleDeleteHotelRooms([selectedRoom.id]);
   };
 
   const columns: ColumnDef<HotelRoom>[] = [
@@ -150,7 +174,7 @@ export const RoomListSection = ({ branchId, roomDetails }: RoomListSectionProps)
     <div className='w-full mt-8'>
       <div className='flex items-center gap-5'>
         <Text type='heading3-semi-bold'>Danh sách phòng</Text>
-        <CreateButton onClick={createUpdateDialog.open} />
+        <CreateButton onClick={openCreate} />
       </div>
       <div className='mt-6 w-full'>
         <DataTable
@@ -158,6 +182,7 @@ export const RoomListSection = ({ branchId, roomDetails }: RoomListSectionProps)
           data={data ?? []}
           loading={loading}
           enableDeleteSelectedRows
+          deleteSelectedRows={onDeleteSelectedRows}
           enableBuiltinFilter
           builtinFilterSearchKey='Tên'
           filterFields={[
@@ -185,6 +210,19 @@ export const RoomListSection = ({ branchId, roomDetails }: RoomListSectionProps)
             refresh();
           }}
         />
+      </DialogCustom>
+
+      <DialogCustom
+        dialog={deleteDialog}
+        header='Xác nhận xóa tỉnh/thành'
+        isConfirmDelete
+        onCloseDelete={closeDelete}
+        onConfirmDelete={onConfirmDelete}
+        deleteLoading={deleteLoading}
+      >
+        <p>{`Bạn có chắc chắn muốn xóa ${idsToDelete.length} phòng ${
+          selectedRoom ? selectedRoom.name : ''
+        }`}</p>
       </DialogCustom>
     </div>
   );

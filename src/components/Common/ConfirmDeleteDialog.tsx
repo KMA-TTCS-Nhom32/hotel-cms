@@ -3,7 +3,7 @@ import { Button } from '../ui/button';
 import { ReactNode } from 'react';
 
 interface ConfirmDeleteDialogProps {
-  title?: string;
+  title?: string | ReactNode;
   header?: string | ReactNode;
   openDeleteDialog: boolean;
   closeDelete: () => void;
