@@ -120,19 +120,16 @@ export const RoomListSection = ({ branchId, roomDetails }: RoomListSectionProps)
       enableHiding: false,
     },
     {
-      id: 'Tên',
       accessorKey: 'name',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Tên phòng' />,
       cell: ({ row }) => <Text type='title1-semi-bold'>{row.original.name}</Text>,
     },
     {
-      id: 'slug',
       accessorKey: 'slug',
       header: () => <span className='text-base'>Slug</span>,
       cell: ({ row }) => <p>{row.original.slug}</p>,
     },
     {
-      id: 'Trạng thái',
       accessorKey: 'status',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Trạng thái' />,
       cell: ({ row }) => {
@@ -151,13 +148,11 @@ export const RoomListSection = ({ branchId, roomDetails }: RoomListSectionProps)
       },
     },
     {
-      id: 'Loại phòng',
       accessorKey: 'detail.id',
       header: () => <span className='text-base'>Loại phòng</span>,
       cell: ({ row }) => <Text type='title1-semi-bold'>{row.original.detail?.name}</Text>,
     },
     {
-      id: 'SL Đặt',
       accessorKey: '_count.bookings',
       header: () => <span className='text-base'>SL Đặt</span>,
       cell: ({ row }) => <p>{row.original._count?.bookings}</p>,
@@ -191,6 +186,28 @@ export const RoomListSection = ({ branchId, roomDetails }: RoomListSectionProps)
               key: 'Loại phòng',
               title: 'Loại phòng',
               options: roomDetailOptions,
+            },
+          ]}
+          viewOptions={[
+            {
+              id: 'name',
+              title: 'Tên phòng',
+            },
+            {
+              id: 'slug',
+              title: 'Slug',
+            },
+            {
+              id: 'status',
+              title: 'Trạng thái',
+            },
+            {
+              id: 'detail.id',
+              title: 'Loại phòng',
+            },
+            {
+              id: '_count.bookings',
+              title: 'SL Đặt',
             },
           ]}
         />

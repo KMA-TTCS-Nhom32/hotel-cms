@@ -4,14 +4,13 @@ import { useDebounce, useRequest } from 'ahooks';
 import { useNavigate } from 'react-router-dom';
 
 import TopSection from '@/components/Common/TopSection';
-import { DataTable, DataTableColumnHeader, DataTableRowActions } from '@/components/ui/data-table';
+import { DataTable, DataTableColumnHeaderSecondary, DataTableRowActions } from '@/components/ui/data-table';
 import { Text } from '@/components/ui/text';
 import { deleteProvinceService, getProvincesService } from '@/services/provinces';
 import { FilterProvincesDto, Province } from '@ahomevilla-hotel/node-sdk';
 import { ColumnDef } from '@tanstack/react-table';
 import { Modal } from '@/components/ui/modal';
 import CreateUpdateForm from './ProvinceForm';
-import { Button } from '@/components/ui/button';
 import { ROUTE_PATH } from '@/routes/route.constant';
 import ConfirmDeleteDialog from '@/components/Common/ConfirmDeleteDialog';
 import { useTranslationStore } from '@/stores/translation/useTranslationStore';
@@ -122,28 +121,30 @@ const BranchPage = () => {
       cell: ({ row }) => <div>{row.index + 1}</div>,
     },
     {
-      id: 'Tỉnh/thành',
+      //   id: 'Tỉnh/thành',
       accessorKey: 'name',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Tỉnh/thành' />,
+      header: ({ column }) => <DataTableColumnHeaderSecondary column={column} title='Tỉnh/thành' />,
       cell: ({ row }) => <Text type='title1-semi-bold'>{row.original.name}</Text>,
     },
     {
-      id: 'Zipcode',
+      //   id: 'Zipcode',
       accessorKey: 'zip_code',
       header: () => <span className='text-base'>Zipcode</span>,
-      cell: ({ row }) => <p>{row.original.zip_code}</p>,
+      enableSorting: true,
     },
     {
-      id: 'Slug',
+      //   id: 'Slug',
       accessorKey: 'slug',
       header: () => <span className='text-base'>Slug</span>,
-      cell: ({ row }) => <p>{row.original.slug}</p>,
     },
     {
-      id: 'Số lượng chi nhánh',
-      accessorKey: 'branch_count',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Số lượng chi nhánh' />,
-      cell: ({ row }) => <Text type='title1-semi-bold'>{row.original._count?.branches}</Text>,
+      id: '_count',
+      accessorKey: '_count.branches',
+      header: ({ column }) => <DataTableColumnHeaderSecondary column={column} title='Số lượng chi nhánh' />,
+      cell: ({ row }) => (
+        <Text type='title1-semi-bold'>{row.original._count?.branches as number}</Text>
+      ),
+      sortingFn: 'basic',
     },
     {
       id: 'actions',

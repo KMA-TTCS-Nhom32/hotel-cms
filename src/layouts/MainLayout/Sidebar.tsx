@@ -1,7 +1,6 @@
-import { useMemo } from 'react';
 import { useRequest } from 'ahooks';
 import { toast } from 'sonner';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   GitBranch,
@@ -12,6 +11,9 @@ import {
   HandPlatter,
 } from 'lucide-react';
 
+import { logoutService } from '@/services/auth';
+import { cn } from '@/lib/utils';
+import { useBreadcrumbStore } from '@/stores/breadcrumbs/useBreadcrumbStore';
 import {
   Sidebar as ShadcnSidebar,
   SidebarContent,
@@ -26,11 +28,7 @@ import {
 import { Text } from '@/components/ui/text';
 import { ROUTE_PATH } from '@/routes/route.constant';
 import { useAuth } from '@/stores/auth/useAuth';
-import { useUserStore } from '@/stores/user/userContext';
-import { logoutService } from '@/services/auth';
 import { useTheme } from '@/components/Theme/theme-provider';
-import { cn } from '@/lib/utils';
-import { useBreadcrumbStore } from '@/stores/breadcrumbs/useBreadcrumbStore';
 
 export const adminItems = [
   { icon: LayoutDashboard, label: 'Dashboard', to: ROUTE_PATH.DASHBOARD },
@@ -47,15 +45,14 @@ const logo = {
   dark: '/logos/logo-large-dark.png',
 };
 
-export function Sidebar() {
-  const { user } = useUserStore((state) => state);
+interface SidebarProps {
+  isAdmin: boolean;
+}
+
+export function Sidebar({ isAdmin }: Readonly<SidebarProps>) {
   const { onLogout } = useAuth();
   const { theme } = useTheme();
   const location = useLocation();
-
-  const isAdmin = useMemo(() => {
-    return user?.role === 'ADMIN';
-  }, [user]);
 
   const navigate = useNavigate();
   const { onNavigate } = useBreadcrumbStore((state) => state);

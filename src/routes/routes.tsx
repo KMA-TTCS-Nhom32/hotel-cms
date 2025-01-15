@@ -10,6 +10,9 @@ const BranchPage = React.lazy(() => import('@/pages/BranchPage'));
 const HotelPage = React.lazy(() => import('@/pages/HotelPage'));
 const AmenityPage = React.lazy(() => import('@/pages/AmenityPage'));
 const HotelDetailPage = React.lazy(() => import('@/pages/HotelPage/HotelDetailPage'));
+const UserPage = React.lazy(() => import('@/pages/UserPage'));
+
+const StaffRoomPage = React.lazy(() => import('@/pages/StaffRoomPage'));
 
 import { ROUTE_PATH } from './route.constant';
 import MainLayout from '@/layouts/MainLayout';
@@ -41,15 +44,23 @@ export const router = createBrowserRouter([
           },
           {
             path: ROUTE_PATH.HOTEL,
-            element: <HotelPage />
+            element: <HotelPage />,
           },
           {
             path: ROUTE_PATH.AMENITY,
-            element: <AmenityPage />
+            element: <AmenityPage />,
           },
           {
             path: `${ROUTE_PATH.HOTEL}/:slug`,
-            element: <HotelDetailPage />
+            element: <HotelDetailPage />,
+          },
+          {
+            path: ROUTE_PATH.USER,
+            element: <UserPage />,
+          },
+          {
+            path: ROUTE_PATH.ROOMS,
+            element: <StaffRoomPage />,
           }
         ],
       },

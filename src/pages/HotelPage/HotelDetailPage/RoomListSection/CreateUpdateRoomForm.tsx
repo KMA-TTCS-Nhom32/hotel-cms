@@ -29,7 +29,7 @@ export const CreateUpdateRoomForm = ({
   const form = useForm<RoomFormValues>({
     resolver: zodResolver(roomschema),
     defaultValues: {
-      detailId: data?.detailId ?? '',
+      detailId: data?.detailId ?? undefined,
       name: data?.name ?? '',
       slug: data?.slug ?? '',
       status: data?.status ?? HotelRoomStatusEnum.Maintenance,
@@ -45,7 +45,11 @@ export const CreateUpdateRoomForm = ({
   const onSubmit = async (values: RoomFormValues) => {
     try {
       if (data) {
-        await updateRoomService(data.id, values);
+        const updatePayload = {
+          ...values,
+          ...(values.slug !== data.slug && { slug: values.slug }),
+        };
+        await updateRoomService(data.id, updatePayload);
       } else {
         await createRoomService(values);
       }

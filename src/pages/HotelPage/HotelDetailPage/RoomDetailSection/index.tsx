@@ -2,7 +2,7 @@ import { RoomDetail } from '@ahomevilla-hotel/node-sdk';
 
 import { Text } from '@/components/ui/text';
 import { DialogCustom } from '@/components/Common/CustomDialog';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CreateButton from '@/components/Common/CreateButton';
 import { Option } from '@/components/ui/multiple-selector';
 import { CreateUpdateRoomDetailForm } from './CreateUpdateRoomDetailForm';
@@ -24,6 +24,7 @@ export const RoomDetailSection = ({
   refreshRequest,
 }: RoomDetailSectionProps) => {
   const [selectedRoom, setSelectedRoom] = useState<RoomDetail | null>(null);
+  const [count, setCount] = useState(1);
 
   const createUpdateDialog = DialogCustom.useDialog();
   const updatePriceDialog = DialogCustom.useDialog();
@@ -43,6 +44,12 @@ export const RoomDetailSection = ({
     setSelectedRoom(roomDetail);
     previewDialog.open();
   };
+
+  useEffect(() => {
+    setCount(count + 1);
+  }, [selectedRoom]);
+
+  console.log('count', count);
 
   return (
     <div className='w-full mt-8'>

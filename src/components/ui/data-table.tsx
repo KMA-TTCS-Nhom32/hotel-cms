@@ -60,11 +60,20 @@ import { Input } from './input';
 import { SelectOption } from '../Common/BasicSelect';
 import { DataTableFacetedFilter } from './data-table-faceted-filter';
 
+export type DataTableViewOptions = {
+  id: string;
+  title: string;
+};
+
 interface DataTableViewOptionsProps<TData> {
   table: TanstackTable<TData>;
+  viewOptions?: DataTableViewOptions[];
 }
 
-export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps<TData>) {
+export function DataTableViewOptions<TData>({
+  table,
+  viewOptions,
+}: DataTableViewOptionsProps<TData>) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -87,7 +96,7 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                {column.id}
+                {viewOptions?.find((option) => option.id === column.id)?.title ?? column.id}
               </DropdownMenuCheckboxItem>
             );
           })}
@@ -178,16 +187,23 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
   );
 }
 
+type DataTableRowAction<TData> = {
+  title: string;
+  onClick: (row: TData) => void;
+};
+
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
   onUpdate?: (row: TData) => void;
   onDelete?: (row: TData) => void;
+  extraActions?: DataTableRowAction<TData>[];
 }
 
 export function DataTableRowActions<TData>({
   row,
   onUpdate,
   onDelete,
+  extraActions,
 }: DataTableRowActionsProps<TData>) {
   return (
     <DropdownMenu>
@@ -203,6 +219,11 @@ export function DataTableRowActions<TData>({
           Xóa
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>
+        {extraActions?.map((action) => (
+          <DropdownMenuItem key={action.title} onClick={() => action.onClick(row.original)}>
+            {action.title}
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -223,6 +244,7 @@ interface DataTableToolbarProps<TData> {
   builtinFilterPlaceholder?: string;
   builtinFilterSearchKey?: string;
   filterFields?: FilterField[];
+  viewOptions?: DataTableViewOptions[];
 }
 
 export function DataTableToolbar<TData>({
@@ -234,6 +256,7 @@ export function DataTableToolbar<TData>({
   builtinFilterPlaceholder = 'Tìm kiếm...',
   builtinFilterSearchKey = 'name',
   filterFields = [],
+  viewOptions,
 }: Readonly<DataTableToolbarProps<TData>>) {
   const isFiltered = table.getState().columnFilters.length > 0;
 
@@ -287,7 +310,7 @@ export function DataTableToolbar<TData>({
               Xóa
             </Button>
           )}
-        <DataTableViewOptions table={table} />
+        <DataTableViewOptions table={table} viewOptions={viewOptions} />
       </div>
     </div>
   );
@@ -339,6 +362,40 @@ export function DataTableColumnHeader<TData, TValue>({
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
+  );
+}
+
+interface DataTableColumnHeaderSecondaryProps<TData, TValue> {
+  column: Column<TData, TValue>;
+  title: string;
+  align?: 'left' | 'center' | 'right';
+}
+
+export function DataTableColumnHeaderSecondary<TData, TValue>({
+  column,
+  title,
+    align = 'left',
+}: DataTableColumnHeaderSecondaryProps<TData, TValue>) {
+  if (!column.getCanSort()) {
+    return <div className={`text-base flex justify-${align} text-${align}`}>{title}</div>;
+  }
+
+  return (
+    <Button
+      variant='ghost'
+      size='sm'
+      className={`-ml-3 h-8 data-[state=open]:bg-accent w-auto justify-self-${align}`}
+      onClick={column.getToggleSortingHandler()}
+    >
+      <span className={`text-base text-${align}`}>{title}</span>
+      {column.getIsSorted() === 'desc' ? (
+        <ArrowDown />
+      ) : column.getIsSorted() === 'asc' ? (
+        <ArrowUp />
+      ) : (
+        <ChevronsUpDown />
+      )}
+    </Button>
   );
 }
 
@@ -397,11 +454,14 @@ export function DataTable<TData, TValue>({
 
     // Manual pagination settings
     manualPagination,
+    manualSorting: manualPagination,
+    manualFiltering: manualPagination,
     // pageCount: manualPagination ? Math.ceil((total || 0) / pageSize) : undefined,
     rowCount: total,
 
     // Event handlers
     enableRowSelection: true,
+    enableMultiSort: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -473,7 +533,6 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      {}
       <DataTablePagination table={table} />
     </div>
   );

@@ -11,11 +11,11 @@ export interface SearchBarProps {
 
 const SearchBar = ({ placeholder = 'Search', value, className, onChange }: SearchBarProps) => {
   return (
-    <div className='relative'>
+    <div className={cn('relative', className)}>
       <Search className='absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
       <Input
         placeholder={placeholder}
-        className={cn('pl-8 min-h-10', className)}
+        className='pl-8 min-h-10'
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
       />

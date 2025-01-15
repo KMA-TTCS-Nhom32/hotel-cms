@@ -12,10 +12,11 @@
     "dev": "vite --host",
     "build": "tsc && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "up-sdk": "pnpm up @ahomevilla-hotel/node-sdk"
   },
   "dependencies": {
-    "@ahomevilla-hotel/node-sdk": "^1.1.4",
+    "@ahomevilla-hotel/node-sdk": "^1.1.6",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-aspect-ratio": "^1.1.1",
     "@radix-ui/react-checkbox": "^1.1.3",

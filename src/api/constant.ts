@@ -30,4 +30,7 @@ export const API_PATH = {
 
   // Rooms
   ROOMS: '/rooms',
+
+  // Users
+  USERS: '/users',
 };
