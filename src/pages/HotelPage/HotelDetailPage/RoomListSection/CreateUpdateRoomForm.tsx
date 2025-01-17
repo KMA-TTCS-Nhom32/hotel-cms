@@ -47,7 +47,7 @@ export const CreateUpdateRoomForm = ({
       if (data) {
         const updatePayload = {
           ...values,
-          ...(values.slug !== data.slug && { slug: values.slug }),
+          ...(values.slug !== data.slug ? { slug: values.slug } : {}),
         };
         await updateRoomService(data.id, updatePayload);
       } else {

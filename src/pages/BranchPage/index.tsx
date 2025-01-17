@@ -4,7 +4,11 @@ import { useDebounce, useRequest } from 'ahooks';
 import { useNavigate } from 'react-router-dom';
 
 import TopSection from '@/components/Common/TopSection';
-import { DataTable, DataTableColumnHeaderSecondary, DataTableRowActions } from '@/components/ui/data-table';
+import {
+  DataTable,
+  DataTableColumnHeaderSecondary,
+  DataTableRowActions,
+} from '@/components/ui/data-table';
 import { Text } from '@/components/ui/text';
 import { deleteProvinceService, getProvincesService } from '@/services/provinces';
 import { FilterProvincesDto, Province } from '@ahomevilla-hotel/node-sdk';
@@ -14,6 +18,7 @@ import CreateUpdateForm from './ProvinceForm';
 import { ROUTE_PATH } from '@/routes/route.constant';
 import ConfirmDeleteDialog from '@/components/Common/ConfirmDeleteDialog';
 import { useTranslationStore } from '@/stores/translation/useTranslationStore';
+import { Button } from '@/components/ui/button';
 
 const BranchPage = () => {
   const { terms } = useTranslationStore((state) => state);
@@ -124,7 +129,11 @@ const BranchPage = () => {
       //   id: 'Tỉnh/thành',
       accessorKey: 'name',
       header: ({ column }) => <DataTableColumnHeaderSecondary column={column} title='Tỉnh/thành' />,
-      cell: ({ row }) => <Text type='title1-semi-bold'>{row.original.name}</Text>,
+      cell: ({ row }) => (
+        <Button variant='ghost' className='p-1' onClick={() => onRowClick(row.original)}>
+          <Text type='title1-semi-bold'>{row.original.name}</Text>
+        </Button>
+      ),
     },
     {
       //   id: 'Zipcode',
@@ -140,7 +149,9 @@ const BranchPage = () => {
     {
       id: '_count',
       accessorKey: '_count.branches',
-      header: ({ column }) => <DataTableColumnHeaderSecondary column={column} title='Số lượng chi nhánh' />,
+      header: ({ column }) => (
+        <DataTableColumnHeaderSecondary column={column} title='Số lượng chi nhánh' />
+      ),
       cell: ({ row }) => (
         <Text type='title1-semi-bold'>{row.original._count?.branches as number}</Text>
       ),
@@ -160,7 +171,7 @@ const BranchPage = () => {
         columns={columns}
         data={provinces}
         loading={loading}
-        onRowClick={onRowClick}
+        // onRowClick={onRowClick}
         extraLeft={
           <TopSection
             placeholder='Tên tỉnh/thành...'
