@@ -4,7 +4,6 @@ import { toast } from 'sonner';
 import { ColumnDef, SortingState } from '@tanstack/react-table';
 import {
   FilterUserDto,
-  FilterUserDtoRolesEnum,
   SortUserDto,
   User,
   UserIdentifierTypeEnum,
@@ -20,11 +19,11 @@ import {
   DataTableRowActions,
 } from '@/components/ui/data-table';
 import { Text } from '@/components/ui/text';
-import TopSection from '@/components/Common/TopSection';
 import SearchBar from '@/components/Common/SearchBar';
 import { getBranchesService } from '@/services/branches';
 import { BasicSelect } from '@/components/Common/BasicSelect';
 import { UpdateUserForm } from './UpdateUserForm';
+import { BlockUserForm } from './BlockUserForm';
 
 const getContactDisplay = (user: User, type: 'email' | 'phone'): string => {
   if (type === 'email') {
@@ -306,6 +305,22 @@ const UserPage = () => {
             branchOptions={branchOptions}
             onRequestSuccess={refresh}
             onCancelDialog={() => closeDialog('update')}
+          />
+        )}
+      </DialogCustom>
+
+      <DialogCustom
+        dialog={blockDialog}
+        header={`${selectedUser?.is_blocked ? 'Bỏ chặn' : 'Chặn'} người dùng`}
+      >
+        {selectedUser && (
+          <BlockUserForm
+            data={selectedUser}
+            onRequestSuccess={() => {
+              refresh();
+              closeDialog('block');
+            }}
+            onCancelDialog={() => closeDialog('block')}
           />
         )}
       </DialogCustom>

@@ -9,6 +9,7 @@ import {
   LogOut,
   Bed,
   HandPlatter,
+  BookOpenCheck,
 } from 'lucide-react';
 
 import { logoutService } from '@/services/auth';
@@ -36,6 +37,7 @@ export const adminItems = [
   { icon: Building2, label: 'Khách sạn', to: ROUTE_PATH.HOTEL },
   { icon: HandPlatter, label: 'Tiện ích', to: ROUTE_PATH.AMENITY },
   { icon: Users, label: 'Người dùng', to: ROUTE_PATH.USER },
+  { icon: BookOpenCheck, label: 'Đơn đặt phòng', to: ROUTE_PATH.BOOKING },
 ];
 
 export const staffItems = [{ icon: Bed, label: 'Phòng', to: ROUTE_PATH.ROOMS }];

@@ -33,4 +33,10 @@ export const API_PATH = {
 
   // Users
   USERS: '/users',
+
+  // Analytics
+  ANALYTICS: '/analytics',
+
+    // Bookings
+    BOOKINGS: '/booking',
 };

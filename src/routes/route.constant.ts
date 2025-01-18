@@ -5,6 +5,7 @@ export const ROUTE_PATH = {
   HOTEL: '/hotels',
   USER: '/users',
   AMENITY: '/amenities',
+  BOOKING: '/bookings',
 
   // staff routes
   ROOMS: '/rooms',

@@ -11,6 +11,7 @@ const HotelPage = React.lazy(() => import('@/pages/HotelPage'));
 const AmenityPage = React.lazy(() => import('@/pages/AmenityPage'));
 const HotelDetailPage = React.lazy(() => import('@/pages/HotelPage/HotelDetailPage'));
 const UserPage = React.lazy(() => import('@/pages/UserPage'));
+const BookingPage = React.lazy(() => import('@/pages/BookingPage'));
 
 const StaffRoomPage = React.lazy(() => import('@/pages/StaffRoomPage'));
 
@@ -59,9 +60,13 @@ export const router = createBrowserRouter([
             element: <UserPage />,
           },
           {
+            path: ROUTE_PATH.BOOKING,
+            element: <BookingPage />,
+          },
+          {
             path: ROUTE_PATH.ROOMS,
             element: <StaffRoomPage />,
-          }
+          },
         ],
       },
     ],

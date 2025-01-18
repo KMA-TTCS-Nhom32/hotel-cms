@@ -23,3 +23,9 @@ export const updateUserSchema = z
   );
 
 export type UpdateUserFormValues = z.infer<typeof updateUserSchema>;
+
+export const blockUserSchema = z.object({
+  reason: z.string().min(1, 'Vui lòng nhập lý do'),
+});
+
+export type BlockUserFormValues = z.infer<typeof blockUserSchema>;
