@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { useDebounce, useRequest } from 'ahooks';
 import { useNavigate } from 'react-router-dom';
@@ -17,11 +17,11 @@ import { Modal } from '@/components/ui/modal';
 import CreateUpdateForm from './ProvinceForm';
 import { ROUTE_PATH } from '@/routes/route.constant';
 import ConfirmDeleteDialog from '@/components/Common/ConfirmDeleteDialog';
-import { useTranslationStore } from '@/stores/translation/useTranslationStore';
+// import { useTranslationStore } from '@/stores/translation/useTranslationStore';
 import { Button } from '@/components/ui/button';
 
 const BranchPage = () => {
-  const { terms } = useTranslationStore((state) => state);
+//   const { terms } = useTranslationStore((state) => state);
   const [selectedProvince, setSelectedProvince] = useState<Province | null>(null);
   const [openCreateUpdateDialog, setOpenCreateUpdateDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -67,18 +67,18 @@ const BranchPage = () => {
     },
   });
 
-  const provinces = useMemo(() => {
-    const terms_province_name = terms.filter((term) => term.term === 'province_name');
+//   const provinces = useMemo(() => {
+//     const terms_province_name = terms.filter((term) => term.term === 'province_name');
 
-    return provincesResponse?.data
-      ? provincesResponse.data.map((province) => ({
-          ...province,
-          name:
-            terms_province_name.find((term) => term.context === province.slug)?.translation
-              .content ?? province.name,
-        }))
-      : [];
-  }, [provincesResponse]);
+//     return provincesResponse?.data
+//       ? provincesResponse.data.map((province) => ({
+//           ...province,
+//           name:
+//             terms_province_name.find((term) => term.context === province.slug)?.translation
+//               .content ?? province.name,
+//         }))
+//       : [];
+//   }, [provincesResponse]);
 
   const openUpdate = (province: Province) => {
     setSelectedProvince(province);
@@ -169,7 +169,7 @@ const BranchPage = () => {
     <div className='w-full'>
       <DataTable
         columns={columns}
-        data={provinces}
+        data={provincesResponse?.data ?? []}
         loading={loading}
         // onRowClick={onRowClick}
         extraLeft={

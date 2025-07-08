@@ -1,5 +1,6 @@
 import { DialogDescription } from '@radix-ui/react-dialog';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from './dialog';
+import { ScrollArea } from './scroll-area';
 
 interface ModalProps {
   title?: string | React.ReactNode;
@@ -41,19 +42,21 @@ export const Modal = ({
         }}
         className={className}
       >
-        {(title || header) && (
-          <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
-            {header}
-          </DialogHeader>
-        )}
-        {children}
-        {(footer || description) && (
-          <DialogFooter>
-            <DialogDescription>{description}</DialogDescription>
-            {footer}
-          </DialogFooter>
-        )}
+        <ScrollArea className='max-h-[75vh] pr-3 overflow-y-hidden'>
+          {(title || header) && (
+            <DialogHeader>
+              <DialogTitle>{title}</DialogTitle>
+              {header}
+            </DialogHeader>
+          )}
+          {children}
+          {(footer || description) && (
+            <DialogFooter>
+              <DialogDescription>{description}</DialogDescription>
+              {footer}
+            </DialogFooter>
+          )}
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );

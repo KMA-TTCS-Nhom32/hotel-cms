@@ -2,6 +2,23 @@ import { z } from 'zod';
 import { imageFileSchema, imageListSchema } from './image';
 import { RegexValidation } from './auth';
 
+// Translation schema for hotel fields
+const translationSchema = z.object({
+  language: z
+    .string({
+      required_error: 'Ngôn ngữ không được để trống',
+    })
+    .min(1, 'Ngôn ngữ không được để trống'),
+  name: z
+    .string({
+      required_error: 'Tên khách sạn không được để trống',
+    })
+    .min(1, 'Tên khách sạn không được để trống')
+    .max(100, 'Tên khách sạn không được vượt quá 100 ký tự'),
+  address: z.string().max(200, 'Địa chỉ không được vượt quá 200 ký tự').optional(),
+  description: z.string().max(2000, 'Mô tả không được vượt quá 2000 ký tự').optional(),
+});
+
 export const branchSchema = z.object({
   provinceId: z.string({
     required_error: 'Vui lòng chọn tỉnh/thành',
@@ -36,6 +53,7 @@ export const branchSchema = z.object({
   //   }),
   thumbnail: imageFileSchema.optional(),
   images: imageListSchema.nullable(),
+  translations: z.array(translationSchema).optional(),
 });
 
 export type BranchFormValues = z.infer<typeof branchSchema>;
@@ -55,21 +73,45 @@ export const updateBranchAmenitiesSchema = z.object({
 export type UpdateBranchAmenitiesFormValues = z.infer<typeof updateBranchAmenitiesSchema>;
 
 const nearBySchema = z.object({
-  name: z.string({
-    required_error: 'Tên địa điểm không được để trống',
-  }).min(1, 'Tên địa điểm không được để trống'),
-  distance: z.string({
-    required_error: 'Khoảng cách không được để trống',
-  }).min(1, 'Khoảng cách không được để trống'),
+  name: z
+    .string({
+      required_error: 'Tên địa điểm không được để trống',
+    })
+    .min(1, 'Tên địa điểm không được để trống'),
+  distance: z
+    .string({
+      required_error: 'Khoảng cách không được để trống',
+    })
+    .min(1, 'Khoảng cách không được để trống'),
+});
+
+const nearByTranslationSchema = z.object({
+  language: z
+    .string({
+      required_error: 'Ngôn ngữ không được để trống',
+    })
+    .min(1, 'Ngôn ngữ không được để trống'),
+  nearBy: z.array(nearBySchema)
+    .optional()
+    .default([])
+    .refine(
+      (data) => data.length === 0 || data.every((item) => item.name && item.distance),
+      {
+        message: 'Vui lòng điền đầy đủ thông tin cho mỗi địa điểm',
+      }
+    ),
 });
 
 export const updateBranchNearBySchema = z.object({
   nearBy: z
     .array(nearBySchema)
     .min(1, 'Vui lòng thêm ít nhất một địa điểm')
-    .refine((data) => data.every(item => item.name && item.distance), {
-      message: "Vui lòng điền đầy đủ thông tin cho mỗi địa điểm",
+    .refine((data) => data.every((item) => item.name && item.distance), {
+      message: 'Vui lòng điền đầy đủ thông tin cho mỗi địa điểm',
     }),
+  translations: z
+    .array(nearByTranslationSchema)
+    .optional(),
 });
 
 export type UpdateBranchNearByFormValues = z.infer<typeof updateBranchNearBySchema>;

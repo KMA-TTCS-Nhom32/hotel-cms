@@ -2,10 +2,10 @@ import { useMemo } from 'react';
 
 import { useRequest } from 'ahooks';
 import { useParams } from 'react-router-dom';
-import { Amenity } from '@ahomevilla-hotel/node-sdk';
+import { Amenity, BranchTranslationDto, NearBy, UpdateBranchDto } from '@ahomevilla-hotel/node-sdk';
 
 import { ROUTE_PATH } from '@/routes/route.constant';
-import { getBranchDetailService } from '@/services/branches';
+import { getBranchDetailService, updateBranchService } from '@/services/branches';
 import { useBreadcrumbStore } from '@/stores/breadcrumbs/useBreadcrumbStore';
 import LoadingSection from '@/components/Common/LoadingSection';
 import ImageGalleryCarousel from '@/components/Common/ImageGalleryCarousel';
@@ -23,6 +23,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RoomListSection } from './RoomListSection';
 import { NotFoundSection } from '@/components/Common/NotFoundSection';
+import { BranchNearBys } from './types';
 
 const RoomDetailPage = () => {
   const params = useParams<{ slug: string }>();
@@ -45,7 +46,7 @@ const RoomDetailPage = () => {
       refreshDeps: [slug],
     },
   );
-  console.log(data);
+
   const { data: getAmenitiesResponse, loading: fetchingAmenities } = useRequest(() =>
     getAmenitiesService({
       pageSize: 100,
@@ -61,6 +62,17 @@ const RoomDetailPage = () => {
       value: amenity.id,
     }));
   };
+
+  const nearByData: BranchNearBys = useMemo(() => {
+    if (!data) return { defaults: [], translations: [] };
+    return {
+      defaults: data.nearBy,
+      translations: data.translations.map((translation) => ({
+        language: translation.language ? translation.language : 'EN',
+        nearBy: (translation.nearBy ? translation.nearBy : []) as NearBy[],
+      })),
+    };
+  }, [data]);
 
   const amenityOtions: { hotel: Option[]; room: Option[] } = useMemo(() => {
     if (!getAmenitiesResponse) return { hotel: [], room: [] };
@@ -92,6 +104,31 @@ const RoomDetailPage = () => {
   if (loading || fetchingAmenities) return <LoadingSection />;
 
   if (!data) return <NotFoundSection content='Không tìm thấy chi nhánh' />;
+
+  const handleUpdateBranchNearByService = async (nearByData: BranchNearBys) => {
+    if (!data) return;
+    console.log('handleUpdateBranchNearByService', nearByData);
+    const updateData: UpdateBranchDto = {
+      nearBy: nearByData.defaults,
+      ...(nearByData.translations.length > 0 && {
+        translations: data.translations.map((t) => {
+          const translation = nearByData.translations.find(
+            (translation) => translation.language === t.language,
+          );
+
+          return {
+            language: t.language,
+            name: t.name,
+            address: t.address,
+            description: t.description,
+            nearBy: translation ? translation.nearBy : [{}],
+          } as unknown as BranchTranslationDto;
+        }),
+      }),
+    };
+
+    return updateBranchService(data.id, updateData);
+  };
 
   const editButton = (length: number, onClick: () => void) => {
     return (
@@ -198,8 +235,8 @@ const RoomDetailPage = () => {
 
       <DialogCustom dialog={updateNearByDialog} header='Cập nhật địa điểm gần'>
         <UpdateNearByForm
-          branchId={data.id}
-          currentNearBys={data.nearBy}
+          branchNearBys={nearByData}
+          updateNearByService={handleUpdateBranchNearByService}
           onCloseDialog={updateNearByDialog.close}
           onSuccessfulUpdate={() => {
             updateNearByDialog.close();

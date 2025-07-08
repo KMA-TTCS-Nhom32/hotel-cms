@@ -33,12 +33,17 @@ const MainLayout = () => {
     return user?.role === 'ADMIN';
   }, [user]);
 
-  console.log(isAdmin, user);
   useEffect(() => {
+    if (location.pathname !== ROUTE_PATH.LOGIN) {
+      localStorage.setItem('returnUrl', location.pathname);
+    }
+
     if (!isAdmin && adminItems.find((item) => location.pathname.includes(item.to))) {
       navigate(ROUTE_PATH.ROOMS);
     } else if (isAdmin && staffItems.find((item) => location.pathname.includes(item.to))) {
-      navigate(ROUTE_PATH.DASHBOARD);
+      const returnUrl = localStorage.getItem('returnUrl');
+
+      navigate(returnUrl ?? ROUTE_PATH.DASHBOARD);
     }
   }, [location.pathname, user]);
 

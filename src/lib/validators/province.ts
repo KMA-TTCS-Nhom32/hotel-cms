@@ -20,6 +20,18 @@ export const provinceSchema = z.object({
   slug: z.string({
     required_error: 'Slug không được để trống',
   }),
+  translations: z
+    .array(
+      z.object({
+        language: z.string({
+          required_error: 'Ngôn ngữ không được để trống',
+        }),
+        name: z.string({
+          required_error: 'Tên Tỉnh/thành không được để trống',
+        }),
+      }),
+    )
+    .optional(),
 });
 
 export type ProvinceFormValues = z.infer<typeof provinceSchema>;

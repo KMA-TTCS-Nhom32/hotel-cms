@@ -30,10 +30,14 @@ export const useInitialProfile = () => {
       return navigate(ROUTE_PATH.LOGIN);
     }
 
+    const returnUrl = localStorage.getItem('returnUrl');
+
     run();
 
-    if (location.pathname === '/') {
+    if (!returnUrl || location.pathname === '/') {
       navigate(ROUTE_PATH.DASHBOARD);
+    } else {
+      navigate(returnUrl);
     }
   });
 

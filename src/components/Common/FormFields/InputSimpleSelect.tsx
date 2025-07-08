@@ -28,6 +28,7 @@ type InputSimpleSelectProps<TFieldValues extends FieldValues> = {
   isLoading?: boolean;
   disabled?: boolean;
   triggerClassName?: string;
+  enableDefault?: boolean;
 };
 
 export function InputSimpleSelect<TFieldValues extends FieldValues>({
@@ -41,6 +42,7 @@ export function InputSimpleSelect<TFieldValues extends FieldValues>({
   isLoading,
   disabled,
   triggerClassName,
+  enableDefault = false,
 }: Readonly<InputSimpleSelectProps<TFieldValues>>) {
   return (
     <FormField
@@ -49,7 +51,11 @@ export function InputSimpleSelect<TFieldValues extends FieldValues>({
       render={({ field }) => (
         <FormItem className={className}>
           <FormLabel>{label}</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select
+            onValueChange={field.onChange}
+            value={field.value}
+            defaultValue={enableDefault ? options[0].value : undefined}
+          >
             <FormControl>
               <SelectTrigger
                 className={cn('w-full', triggerClassName)}
