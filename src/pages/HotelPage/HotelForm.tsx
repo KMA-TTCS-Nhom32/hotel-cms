@@ -121,7 +121,7 @@ const HotelForm = ({ data, provinces, onRequestSuccess, onCancel }: HotelFormPro
     if (payload.translations) {
       payload.translations = payload.translations.map((t) => ({
         ...t,
-        nearBy: t.nearBy ? t.nearBy : [{} as NearBy],
+        nearBy: t.nearBy ? t.nearBy : undefined,
       }));
     }
 
