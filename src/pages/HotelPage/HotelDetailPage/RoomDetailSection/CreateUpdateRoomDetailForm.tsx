@@ -152,7 +152,7 @@ export const CreateUpdateRoomDetailForm = ({
   };
 
   return (
-    <ScrollArea className='w-full h-full pr-2.5 -mr-2.5 max-h-[600px] hidden-scrollbar'>
+    <ScrollArea className='w-full h-full pr-2.5 -mr-2.5 hidden-scrollbar'>
       <Form {...form}>
         <form onSubmit={handleSubmit(handleCreateUpdate)} className='w-full space-y-4 px-[1px]'>
           <FormField
