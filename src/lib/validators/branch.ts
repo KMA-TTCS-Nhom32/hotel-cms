@@ -47,10 +47,16 @@ export const branchSchema = z.object({
   address: z.string({
     required_error: 'Địa chỉ không được để trống',
   }),
-  //   location: z.object({
-  //     latitude: z.number(),
-  //     longitude: z.number(),
-  //   }),
+  location: z.object({
+    latitude: z
+      .string()
+      .regex(/^[0-9.]+$/, 'Vĩ độ phải là số thập phân')
+      .optional(),
+    longitude: z
+      .string()
+      .regex(/^[0-9.]+$/, 'Kinh độ phải là số thập phân')
+      .optional(),
+  }),
   thumbnail: imageFileSchema.optional(),
   images: imageListSchema.nullable(),
   translations: z.array(translationSchema).optional(),
@@ -91,15 +97,13 @@ const nearByTranslationSchema = z.object({
       required_error: 'Ngôn ngữ không được để trống',
     })
     .min(1, 'Ngôn ngữ không được để trống'),
-  nearBy: z.array(nearBySchema)
+  nearBy: z
+    .array(nearBySchema)
     .optional()
     .default([])
-    .refine(
-      (data) => data.length === 0 || data.every((item) => item.name && item.distance),
-      {
-        message: 'Vui lòng điền đầy đủ thông tin cho mỗi địa điểm',
-      }
-    ),
+    .refine((data) => data.length === 0 || data.every((item) => item.name && item.distance), {
+      message: 'Vui lòng điền đầy đủ thông tin cho mỗi địa điểm',
+    }),
 });
 
 export const updateBranchNearBySchema = z.object({
@@ -109,9 +113,7 @@ export const updateBranchNearBySchema = z.object({
     .refine((data) => data.every((item) => item.name && item.distance), {
       message: 'Vui lòng điền đầy đủ thông tin cho mỗi địa điểm',
     }),
-  translations: z
-    .array(nearByTranslationSchema)
-    .optional(),
+  translations: z.array(nearByTranslationSchema).optional(),
 });
 
 export type UpdateBranchNearByFormValues = z.infer<typeof updateBranchNearBySchema>;

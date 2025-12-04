@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@ahomevilla-hotel/node-sdk':
-        specifier: 2025.7.0-7.83310
-        version: 2025.7.0-7.83310
+        specifier: 2025.12.0-4.171535
+        version: 2025.12.0-4.171535
       '@hookform/resolvers':
         specifier: ^3.9.1
         version: 3.9.1(react-hook-form@7.54.1(react@18.3.1))
@@ -195,8 +195,8 @@ importers:
 
 packages:
 
-  '@ahomevilla-hotel/node-sdk@2025.7.0-7.83310':
-    resolution: {integrity: sha512-dCkB5fmsNRwRAm76jGhvy9CYZrUyLmq/jZJ780GhbypXZseWqrv+OWvjiSrCX13TGbYI0B1G0x5dUxZrv32zsQ==}
+  '@ahomevilla-hotel/node-sdk@2025.12.0-4.171535':
+    resolution: {integrity: sha512-soUVgjAs/091fcgmfNNvQ3kRBsJvS+yaj0MxCFNYzoNBGUpma9drCFepcncOS5yVzZYAZyHaU6tENYUE1Y+tXA==}
 
   '@alloc/quick-lru@5.2.0':
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
@@ -1808,8 +1808,8 @@ packages:
     peerDependencies:
       postcss: ^8.1.0
 
-  axios@1.10.0:
-    resolution: {integrity: sha512-/1xYAC4MP/HEG+3duIhFr4ZQXR4sQXOIe+o6sdqzeykGLx6Upp/1p8MHqhINOvGeP7xyNHe7tsiJByc4SSVUxw==}
+  axios@1.13.2:
+    resolution: {integrity: sha512-VPk9ebNqPcy5lRGuSlKx752IlDatOjT9paPlm8A7yOuW2Fbvp4X3JznJtT4f0GzGLLiWE9W8onz51SqLYwzGaA==}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -2199,8 +2199,8 @@ packages:
   flatted@3.3.2:
     resolution: {integrity: sha512-AiwGJM8YcNOaobumgtng+6NHuOqC3A7MixFeDafM3X9cIUM+xUXoS5Vfgf+OihAYe20fxqNM9yPBXJzRtZ/4eA==}
 
-  follow-redirects@1.15.9:
-    resolution: {integrity: sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==}
+  follow-redirects@1.15.11:
+    resolution: {integrity: sha512-deG2P0JfjrTxl50XGCDyfI97ZGVCxIpfKYmfyrQ54n5FO/0gfIES8C/Psl6kWVDolizcaaxZJnTS0QSMxvnsBQ==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -2212,8 +2212,8 @@ packages:
     resolution: {integrity: sha512-Ld2g8rrAyMYFXBhEqMz8ZAHBi4J4uS1i/CxGMDnjyFWddMXLVcDp051DZfu+t7+ab7Wv6SMqpWmyFIj5UbfFvg==}
     engines: {node: '>=14'}
 
-  form-data@4.0.3:
-    resolution: {integrity: sha512-qsITQPfmvMOSAdeyZ+12I1c+CKSstAFAwu+97zrnWAbIr5u8wfsExUzCesVLC8NgHuRUqNN4Zy6UPWUTRGslcA==}
+  form-data@4.0.5:
+    resolution: {integrity: sha512-8RipRLol37bNs2bhoV67fiTEvdTrbMUYcFTiy3+wuuOnUog2QBHCZWXDRijWQfAkhBj2Uf5UnVaiWwA5vdd82w==}
     engines: {node: '>= 6'}
 
   fraction.js@4.3.7:
@@ -3220,9 +3220,9 @@ packages:
 
 snapshots:
 
-  '@ahomevilla-hotel/node-sdk@2025.7.0-7.83310':
+  '@ahomevilla-hotel/node-sdk@2025.12.0-4.171535':
     dependencies:
-      axios: 1.10.0
+      axios: 1.13.2
     transitivePeerDependencies:
       - debug
 
@@ -4655,10 +4655,10 @@ snapshots:
       postcss: 8.4.49
       postcss-value-parser: 4.2.0
 
-  axios@1.10.0:
+  axios@1.13.2:
     dependencies:
-      follow-redirects: 1.15.9
-      form-data: 4.0.3
+      follow-redirects: 1.15.11
+      form-data: 4.0.5
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
@@ -5066,14 +5066,14 @@ snapshots:
 
   flatted@3.3.2: {}
 
-  follow-redirects@1.15.9: {}
+  follow-redirects@1.15.11: {}
 
   foreground-child@3.3.0:
     dependencies:
       cross-spawn: 7.0.6
       signal-exit: 4.1.0
 
-  form-data@4.0.3:
+  form-data@4.0.5:
     dependencies:
       asynckit: 0.4.0
       combined-stream: 1.0.8
