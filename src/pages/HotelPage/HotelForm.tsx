@@ -80,7 +80,7 @@ const HotelForm = ({ data, provinces, onRequestSuccess, onCancel }: HotelFormPro
       phone: data?.phone ?? '',
       description: data?.description ?? '',
       address: data?.address ?? '',
-      //   location: data?.location ?? { latitude: 0, longitude: 0 },
+      location: data?.location ?? { latitude: undefined, longitude: undefined },
       thumbnail: undefined,
       images: null,
       translations: data?.translations ?? [],
@@ -152,7 +152,7 @@ const HotelForm = ({ data, provinces, onRequestSuccess, onCancel }: HotelFormPro
           defaultValue='main'
           value={activeTab}
           onValueChange={setActiveTab}
-          className='w-full mt-4'
+          className='w-full mt-4 mb-10 px-[1px]'
         >
           <div className='flex items-center justify-between mb-4'>
             <TabsList className='grid w-full grid-cols-2'>
@@ -342,20 +342,21 @@ const HotelForm = ({ data, provinces, onRequestSuccess, onCancel }: HotelFormPro
               label='Địa chỉ'
               placeholder='Nhập địa chỉ'
             />
-            {/* <div className='grid grid-cols-2 gap-3'>
-                <InputText<BranchFormValues>
-                  control={control}
-                  name='location.latitude'
-                  label='Vĩ độ'
-                  placeholder='Nhập latitude'
-                />
-                <InputText<BranchFormValues>
-                  control={control}
-                  name='location.longitude'
-                  label='Kinh độ'
-                  placeholder='Nhập longitude'
-                />
-              </div> */}
+
+            <div className='grid grid-cols-2 gap-3'>
+              <InputText<BranchFormValues>
+                control={control}
+                name='location.latitude'
+                label='Vĩ độ'
+                placeholder='Nhập latitude'
+              />
+              <InputText<BranchFormValues>
+                control={control}
+                name='location.longitude'
+                label='Kinh độ'
+                placeholder='Nhập longitude'
+              />
+            </div>
           </TabsContent>
 
           <TabsContent value='translations' className='space-y-4'>
@@ -475,7 +476,8 @@ const HotelForm = ({ data, provinces, onRequestSuccess, onCancel }: HotelFormPro
           </TabsContent>
         </Tabs>
 
-        <div className='flex justify-end gap-3 mt-8'>
+        {/* Make this footer sticky at bottom */}
+        <div className='w-full bg-background pt-8 flex gap-3 sticky bottom-0 left-0 right-0'>
           <Button type='button' variant='outline' onClick={onCancel} className='w-full'>
             Hủy
           </Button>
