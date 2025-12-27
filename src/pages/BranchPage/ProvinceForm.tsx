@@ -33,7 +33,7 @@ const CreateUpdateForm = ({ data, onRequestSuccess }: CreateUpdateFormProps) => 
       name: data?.name ?? '',
       zip_code: data?.zip_code ?? '',
       slug: data?.slug ?? '',
-      translations: data?.translations ?? [],
+      translations: data?.translations.filter((t) => t.language !== 'VI') ?? [],
     },
   });
 
