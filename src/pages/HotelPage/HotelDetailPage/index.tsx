@@ -30,8 +30,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RoomListSection } from './RoomListSection';
 import { NotFoundSection } from '@/components/Common/NotFoundSection';
 import { BranchNearBys } from './types';
-import { LanguageList } from '@/lib/constants';
+// import { LanguageList } from '@/lib/constants';
 import { getRoomDetailService } from '@/services/room-detail';
+import { getRoomsByBranchIdService } from '@/services/room';
 
 const RoomDetailPage = () => {
   const params = useParams<{ slug: string }>();
@@ -74,6 +75,14 @@ const RoomDetailPage = () => {
       refreshDeps: [data],
     },
   );
+
+  const {
+    data: roomsData,
+    loading: roomsLoading,
+    refresh: refreshRooms,
+  } = useRequest(() => getRoomsByBranchIdService(data?.id || ''), {
+    refreshDeps: [data],
+  });
 
   const { data: getAmenitiesResponse, loading: fetchingAmenities } = useRequest(() =>
     getAmenitiesService({
@@ -248,7 +257,12 @@ const RoomDetailPage = () => {
             />
           </TabsContent>
           <TabsContent value='room'>
-            <RoomListSection branchId={data.id} roomDetails={roomDetails?.data || []} />
+            <RoomListSection
+              roomDetails={roomDetails?.data || []}
+              data={roomsData || []}
+              loading={roomsLoading}
+              refresh={refreshRooms}
+            />
           </TabsContent>
         </Tabs>
       )}

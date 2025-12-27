@@ -17,8 +17,8 @@ export const BedTypeOptions: SelectOption[] = [
 ];
 
 export const RoomStatusOptions: OptionWithIcon<HotelRoomStatusEnum>[] = [
-  { value: HotelRoomStatusEnum.Available, label: 'Còn trống', icon: CheckCircle },
-  { value: HotelRoomStatusEnum.Booked, label: 'Đã đặt', icon: NotebookPen },
+  { value: HotelRoomStatusEnum.Available, label: 'Đang hoạt động', icon: CheckCircle },
+  // { value: HotelRoomStatusEnum.Booked, label: 'Đã đặt', icon: NotebookPen },
   { value: HotelRoomStatusEnum.Maintenance, label: 'Bảo trì', icon: Construction },
-  { value: HotelRoomStatusEnum.Occupied, label: 'Đang sử dụng', icon: TentTree },
+  // { value: HotelRoomStatusEnum.Occupied, label: 'Đang sử dụng', icon: TentTree },
 ];

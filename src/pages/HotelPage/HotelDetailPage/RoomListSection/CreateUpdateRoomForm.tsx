@@ -1,5 +1,10 @@
 import { useForm } from 'react-hook-form';
-import { HotelRoom, HotelRoomStatusEnum } from '@ahomevilla-hotel/node-sdk';
+import {
+  CreateHotelRoomDto,
+  HotelRoom,
+  HotelRoomStatusEnum,
+  UpdateHotelRoomDto,
+} from '@ahomevilla-hotel/node-sdk';
 import { toast } from 'sonner';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -48,10 +53,10 @@ export const CreateUpdateRoomForm = ({
         const updatePayload = {
           ...values,
           ...(values.slug !== data.slug ? { slug: values.slug } : {}),
-        };
+        } as unknown as UpdateHotelRoomDto;
         await updateRoomService(data.id, updatePayload);
       } else {
-        await createRoomService(values);
+        await createRoomService(values as unknown as CreateHotelRoomDto);
       }
 
       toast.success(`${data ? 'Cập nhật' : 'Tạo mới'} phòng thành công`);

@@ -13,26 +13,28 @@ import { DataTable, DataTableColumnHeader, DataTableRowActions } from '@/compone
 import { Text } from '@/components/ui/text';
 import CreateButton from '@/components/Common/CreateButton';
 import { CreateUpdateRoomForm } from './CreateUpdateRoomForm';
-import ConfirmDeleteDialog from '@/components/Common/ConfirmDeleteDialog';
 
 interface RoomListSectionProps {
-  branchId: string;
+  // branchId: string;
   roomDetails: RoomDetail[];
+  data: HotelRoom[];
+  loading: boolean;
+  refresh: () => void;
 }
 
-export const RoomListSection = ({ branchId, roomDetails }: RoomListSectionProps) => {
+export const RoomListSection = ({
+  // branchId,
+  roomDetails,
+  data,
+  loading,
+  refresh,
+}: RoomListSectionProps) => {
   const [selectedRoom, setSelectedRoom] = useState<HotelRoom | null>(null);
   const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
   const createUpdateDialog = DialogCustom.useDialog();
   const deleteDialog = DialogCustom.useDialog();
 
   const roomDetailOptions = roomDetails.map((room) => ({ label: room.name, value: room.id }));
-
-  const { data, loading, refresh } = useRequest(() => getRoomsByBranchIdService(branchId), {
-    onError: () => {
-      toast.error('Lỗi khi lấy dữ liệu');
-    },
-  });
 
   const { run: handleDeleteHotelRooms, loading: deleteLoading } = useRequest(
     (ids: string[]) => {
@@ -156,11 +158,11 @@ export const RoomListSection = ({ branchId, roomDetails }: RoomListSectionProps)
         </Text>
       ),
     },
-    {
-      accessorKey: '_count.bookings',
-      header: () => <span className='text-base'>SL Đặt</span>,
-      cell: ({ row }) => <p>{row.original._count?.bookings}</p>,
-    },
+    // {
+    //   accessorKey: '_count.bookings',
+    //   header: () => <span className='text-base'>SL Đặt</span>,
+    //   cell: ({ row }) => <p>{row.original._count?.bookings}</p>,
+    // },
     {
       id: 'actions',
       cell: ({ row }) => (
@@ -210,10 +212,10 @@ export const RoomListSection = ({ branchId, roomDetails }: RoomListSectionProps)
               id: 'detail.id',
               title: 'Loại phòng',
             },
-            {
-              id: '_count.bookings',
-              title: 'SL Đặt',
-            },
+            // {
+            //   id: '_count.bookings',
+            //   title: 'SL Đặt',
+            // },
           ]}
         />
       </div>
