@@ -51,7 +51,7 @@ export const UpdateAmenitiesForm = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='w-full space-y-4'>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='w-full space-y-4 h-auto'>
         <FormField
           control={form.control}
           name='amenities'

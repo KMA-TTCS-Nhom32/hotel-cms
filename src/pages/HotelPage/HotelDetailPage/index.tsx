@@ -24,6 +24,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RoomListSection } from './RoomListSection';
 import { NotFoundSection } from '@/components/Common/NotFoundSection';
 import { BranchNearBys } from './types';
+import { LanguageList } from '@/lib/constants';
 
 const RoomDetailPage = () => {
   const params = useParams<{ slug: string }>();
@@ -111,19 +112,21 @@ const RoomDetailPage = () => {
     const updateData: UpdateBranchDto = {
       nearBy: nearByData.defaults,
       ...(nearByData.translations.length > 0 && {
-        translations: data.translations.map((t) => {
-          const translation = nearByData.translations.find(
-            (translation) => translation.language === t.language,
-          );
+        translations: data.translations
+          .filter((t) => t.language !== 'VI')
+          .map((t) => {
+            const translation = nearByData.translations.find(
+              (translation) => translation.language === t.language,
+            );
 
-          return {
-            language: t.language,
-            name: t.name,
-            address: t.address,
-            description: t.description,
-            nearBy: translation ? translation.nearBy : [{}],
-          } as unknown as BranchTranslationDto;
-        }),
+            return {
+              language: t.language,
+              name: t.name,
+              address: t.address,
+              description: t.description,
+              nearBy: translation ? translation.nearBy : [{}],
+            } as unknown as BranchTranslationDto;
+          }),
       }),
     };
 
