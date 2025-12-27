@@ -31,6 +31,7 @@ export const RoomDetailSection = ({
   const previewDialog = DialogCustom.useDialog();
 
   const openUpdate = (roomDetail: RoomDetail) => {
+    console.log('roomDetail', roomDetail);
     setSelectedRoom(roomDetail);
     createUpdateDialog.open();
   };

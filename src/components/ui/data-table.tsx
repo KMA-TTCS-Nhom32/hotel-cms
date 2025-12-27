@@ -374,7 +374,7 @@ interface DataTableColumnHeaderSecondaryProps<TData, TValue> {
 export function DataTableColumnHeaderSecondary<TData, TValue>({
   column,
   title,
-    align = 'left',
+  align = 'left',
 }: DataTableColumnHeaderSecondaryProps<TData, TValue>) {
   if (!column.getCanSort()) {
     return <div className={`text-base flex justify-${align} text-${align}`}>{title}</div>;
@@ -430,6 +430,10 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: pageSize,
+  });
 
   const table = useReactTable({
     data,
@@ -439,10 +443,7 @@ export function DataTable<TData, TValue>({
       columnVisibility,
       rowSelection,
       columnFilters,
-      pagination: {
-        pageIndex: manualPagination ? page : 0,
-        pageSize: pageSize,
-      },
+      pagination: manualPagination ? { pageIndex: page, pageSize: pageSize } : pagination,
     },
     // Configure features based on pagination mode
     getCoreRowModel: getCoreRowModel(),
@@ -466,12 +467,14 @@ export function DataTable<TData, TValue>({
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
-    onPaginationChange: (updater) => {
-      if (manualPagination && onChangePage && typeof updater === 'function') {
-        const { pageIndex } = updater({ pageIndex: page, pageSize });
-        onChangePage(pageIndex);
-      }
-    },
+    onPaginationChange: manualPagination
+      ? (updater) => {
+          if (onChangePage && typeof updater === 'function') {
+            const { pageIndex } = updater({ pageIndex: page, pageSize });
+            onChangePage(pageIndex);
+          }
+        }
+      : setPagination,
   });
 
   useUpdateEffect(() => {

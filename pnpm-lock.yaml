@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@ahomevilla-hotel/node-sdk':
-        specifier: 2025.12.0-4.171535
-        version: 2025.12.0-4.171535
+        specifier: 2025.12.2-7.141427
+        version: 2025.12.2-7.141427
       '@hookform/resolvers':
         specifier: ^3.9.1
         version: 3.10.0(react-hook-form@7.69.0(react@18.3.1))
@@ -195,8 +195,8 @@ importers:
 
 packages:
 
-  '@ahomevilla-hotel/node-sdk@2025.12.0-4.171535':
-    resolution: {integrity: sha512-soUVgjAs/091fcgmfNNvQ3kRBsJvS+yaj0MxCFNYzoNBGUpma9drCFepcncOS5yVzZYAZyHaU6tENYUE1Y+tXA==}
+  '@ahomevilla-hotel/node-sdk@2025.12.2-7.141427':
+    resolution: {integrity: sha512-6RzNpkWhcM8tXWPUdLAGZIwl9t85s56koSebDxxqd9Da+mpDeS6FDJCm0491dnqsDXZqIULGLJ8qjfRamC06uA==}
 
   '@alloc/quick-lru@5.2.0':
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
@@ -2910,7 +2910,7 @@ packages:
 
 snapshots:
 
-  '@ahomevilla-hotel/node-sdk@2025.12.0-4.171535':
+  '@ahomevilla-hotel/node-sdk@2025.12.2-7.141427':
     dependencies:
       axios: 1.13.2
     transitivePeerDependencies:

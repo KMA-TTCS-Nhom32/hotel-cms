@@ -150,7 +150,11 @@ export const RoomListSection = ({ branchId, roomDetails }: RoomListSectionProps)
     {
       accessorKey: 'detail.id',
       header: () => <span className='text-base'>Loại phòng</span>,
-      cell: ({ row }) => <Text type='title1-semi-bold'>{row.original.detail?.name}</Text>,
+      cell: ({ row }) => (
+        <Text type='title1-semi-bold'>
+          {roomDetails.find((detail) => detail.id === row.original.detailId)?.name}
+        </Text>
+      ),
     },
     {
       accessorKey: '_count.bookings',
@@ -171,7 +175,7 @@ export const RoomListSection = ({ branchId, roomDetails }: RoomListSectionProps)
         <Text type='heading3-semi-bold'>Danh sách phòng</Text>
         <CreateButton onClick={openCreate} />
       </div>
-      <div className='mt-6 w-full'>
+      <div className='mt-6 w-full pb-10'>
         <DataTable
           columns={columns}
           data={data ?? []}
@@ -180,6 +184,7 @@ export const RoomListSection = ({ branchId, roomDetails }: RoomListSectionProps)
           deleteSelectedRows={onDeleteSelectedRows}
           enableBuiltinFilter
           builtinFilterSearchKey='Tên'
+          manualPagination={false}
           filterFields={[
             { key: 'Trạng thái', title: 'Trạng thái', options: RoomStatusOptions },
             {

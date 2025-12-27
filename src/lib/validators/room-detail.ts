@@ -2,6 +2,24 @@ import { z } from 'zod';
 import { imageFileSchema, imageListSchema } from './image';
 import { optionalPriceSchema, optionSchema, priceSchema } from './common';
 
+const roomDetailTranslationSchema = z.object({
+  language: z
+    .string({
+      required_error: 'Ngôn ngữ không được để trống',
+    })
+    .min(1, 'Ngôn ngữ không được để trống'),
+  name: z
+    .string({
+      required_error: 'Tên loại phòng không được để trống',
+    })
+    .min(1, 'Tên loại phòng không được để trống'),
+  description: z
+    .string({
+      required_error: 'Mô tả không được để trống',
+    })
+    .min(1, 'Mô tả không được để trống'),
+});
+
 export const roomDetailSchema = z.object({
   name: z.string({
     required_error: 'Tên loại phòng không được để trống',
@@ -39,6 +57,7 @@ export const roomDetailSchema = z.object({
   base_price_per_hour: priceSchema,
   base_price_per_night: priceSchema,
   base_price_per_day: priceSchema,
+  translations: z.array(roomDetailTranslationSchema).optional(),
 });
 
 export type RoomDetailFormValues = z.infer<typeof roomDetailSchema>;

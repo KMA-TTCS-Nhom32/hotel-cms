@@ -2,7 +2,13 @@ import { useMemo } from 'react';
 
 import { useRequest } from 'ahooks';
 import { useParams } from 'react-router-dom';
-import { Amenity, BranchTranslationDto, NearBy, UpdateBranchDto } from '@ahomevilla-hotel/node-sdk';
+import {
+  Amenity,
+  BranchTranslationDto,
+  FilterRoomDetailDto,
+  NearBy,
+  UpdateBranchDto,
+} from '@ahomevilla-hotel/node-sdk';
 
 import { ROUTE_PATH } from '@/routes/route.constant';
 import { getBranchDetailService, updateBranchService } from '@/services/branches';
@@ -25,6 +31,7 @@ import { RoomListSection } from './RoomListSection';
 import { NotFoundSection } from '@/components/Common/NotFoundSection';
 import { BranchNearBys } from './types';
 import { LanguageList } from '@/lib/constants';
+import { getRoomDetailService } from '@/services/room-detail';
 
 const RoomDetailPage = () => {
   const params = useParams<{ slug: string }>();
@@ -45,6 +52,26 @@ const RoomDetailPage = () => {
         setBreadcrumbs([{ label: data.name, to: `${ROUTE_PATH.HOTEL}/${data.slug}` }]);
       },
       refreshDeps: [slug],
+    },
+  );
+
+  const {
+    data: roomDetails,
+    loading: fetchingRoomDetails,
+    refresh: refreshRoomDetails,
+  } = useRequest(
+    () => {
+      if (!slug) return Promise.resolve(undefined);
+      return getRoomDetailService({
+        page: 1,
+        pageSize: 100,
+        filters: JSON.stringify({
+          branchSlug: slug,
+        } as FilterRoomDetailDto),
+      });
+    },
+    {
+      refreshDeps: [data],
     },
   );
 
@@ -200,27 +227,31 @@ const RoomDetailPage = () => {
         </CardContent>
       </Card>
 
-      <Tabs defaultValue='room-detail' className='w-full mt-6'>
-        <TabsList className='grid w-full grid-cols-2 h-auto'>
-          <TabsTrigger value='room-detail' className='py-2'>
-            <Text type='title1-semi-bold'>Loại Phòng</Text>
-          </TabsTrigger>
-          <TabsTrigger value='room' className='py-2'>
-            <Text type='title1-semi-bold'>Danh sách phòng</Text>
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value='room-detail'>
-          <RoomDetailSection
-            branchId={data.id}
-            roomDetails={data.rooms}
-            allRoomAmenities={amenityOtions.room}
-            refreshRequest={refresh}
-          />
-        </TabsContent>
-        <TabsContent value='room'>
-          <RoomListSection branchId={data.id} roomDetails={data.rooms} />
-        </TabsContent>
-      </Tabs>
+      {fetchingRoomDetails ? (
+        <LoadingSection />
+      ) : (
+        <Tabs defaultValue='room-detail' className='w-full mt-6'>
+          <TabsList className='grid w-full grid-cols-2 h-auto'>
+            <TabsTrigger value='room-detail' className='py-2'>
+              <Text type='title1-semi-bold'>Loại Phòng</Text>
+            </TabsTrigger>
+            <TabsTrigger value='room' className='py-2'>
+              <Text type='title1-semi-bold'>Danh sách phòng</Text>
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value='room-detail'>
+            <RoomDetailSection
+              branchId={data.id}
+              roomDetails={roomDetails?.data || []}
+              allRoomAmenities={amenityOtions.room}
+              refreshRequest={refreshRoomDetails}
+            />
+          </TabsContent>
+          <TabsContent value='room'>
+            <RoomListSection branchId={data.id} roomDetails={roomDetails?.data || []} />
+          </TabsContent>
+        </Tabs>
+      )}
 
       {/* Dialogs */}
       <DialogCustom dialog={updateAmenitiesDialog} header='Cập nhật tiện ích'>
